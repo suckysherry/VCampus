@@ -1,0 +1,10 @@
+.recommenders/*
+.metadata/*
+*/.settings/*
+
+.DS_Store
+
+*.class
+
+.classpath
+.project
