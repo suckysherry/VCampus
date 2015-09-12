@@ -1,19 +1,19 @@
 package conn.common;
 
-//import java.io.Serializable;
-
-public class Student { //implements Serializable
-	//private static;
+public class Teacher {
 	
 	protected String uCard;
 	protected String uRole;
 	protected String uID;
 	protected String uName;
 	protected String uSex;
-	protected String uCourse;
 	protected String uClass;
-	protected String uBirthday;
-	protected String uHometown;
+	
+	public Teacher(String name){
+		this.uName = name;
+	}
+	
+	public Teacher() {}
 	
 	public String getUCard() {
 		return uCard;
@@ -56,14 +56,6 @@ public class Student { //implements Serializable
 		this.uSex = uSex;
 	}
 	
-	public String getUCourse() {
-		return uCourse;
-	}
-	
-	public  void setUCourse(String uCourse) {
-		this.uCourse = uCourse;
-	}
-	
 	public String getUClass() {
 		return uClass;
 	}
@@ -72,20 +64,4 @@ public class Student { //implements Serializable
 		this.uClass = uClass;
 	}
 	
-	public String getUBirthday() {
-		return uBirthday;
-	}
-	
-	public  void setUBirthday(String uBirthday) {
-		this.uBirthday = uBirthday;
-	}
-	
-	public String getUHometown() {
-		return uHometown;
-	}
-	
-	public  void setUHometown(String uHometown) {
-		this.uHometown = uHometown;
-	}
-
 }
