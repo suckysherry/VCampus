@@ -17,25 +17,33 @@ import conn.common.*;
  *
  */
 
-public class ClientUserManageWindow extends JFrame {
+public class ClientUserManageWindow {
+	private JPanel createPanel;
+	private JLabel background;
+	
+	public JPanel getJPanel() {
+		return createPanel;
+	}
+	public JLabel getBackground() {
+		return background;
+	}
 	
 	public ClientUserManageWindow() {
 		
-		setResizable(false);
-		setTitle("Create new user");
-		setBounds(100, 100, 500, 500);
-		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		setLocationRelativeTo(getOwner());
-		
-		final JPanel createPanel = new JPanel();
+//		setResizable(false);
+//		setTitle("Create new user");
+//		setBounds(100, 100, 500, 500);
+//		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+//		setLocationRelativeTo(getOwner());
+		createPanel = new JPanel();
 		createPanel.setOpaque(false);
-		getContentPane().add(createPanel, BorderLayout.CENTER);
-		((JPanel) getContentPane()).setOpaque(false);
+//		getContentPane().add(createPanel, BorderLayout.CENTER);
+//		((JPanel) getContentPane()).setOpaque(false);
 		createPanel.setLayout(null);
 		
 		ImageIcon img = new ImageIcon(getClass().getResource("/res/menuuser.png"));
-		JLabel background = new JLabel(img);
-		getLayeredPane().add(background, new Integer(Integer.MIN_VALUE));
+		background = new JLabel(img);
+//		getLayeredPane().add(background, new Integer(Integer.MIN_VALUE));
 		background.setBounds(0, 0, img.getIconWidth(), img.getIconHeight());
 		background.setLayout(null);
 		

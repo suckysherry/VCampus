@@ -38,6 +38,9 @@ public class ClientMenuWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(getOwner());
 		setType(Type.POPUP);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
+		
 		
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
@@ -161,7 +164,18 @@ public class ClientMenuWindow extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
 					ClientUserManageWindow cumw = new ClientUserManageWindow();
-					cumw.setVisible(true);
+//					cumw.setVisible(true);
+					JPanel cumwPanel = cumw.getJPanel();
+					JLabel cumwBackground = cumw.getBackground();
+					
+					getContentPane().removeAll();
+					getContentPane().invalidate();
+					getContentPane().add(cumwPanel);
+					getContentPane().revalidate();
+					
+					getLayeredPane().remove(background);
+					getLayeredPane().add(cumwBackground, new Integer(Integer.MIN_VALUE));
+					
 				}
 			});
 			panel.add(btnUserMng);
@@ -205,6 +219,8 @@ public class ClientMenuWindow extends JFrame {
 		clw.frame.setVisible(false);
 		
 	}
+	
+
 	
 	public JPanel getContentPanel() {
 		return contentPanel;
