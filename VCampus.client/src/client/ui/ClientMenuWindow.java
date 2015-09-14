@@ -38,9 +38,6 @@ public class ClientMenuWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(getOwner());
 		setType(Type.POPUP);
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		
-		
 		
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
