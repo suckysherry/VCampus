@@ -5,11 +5,15 @@ import java.awt.event.*;
 import java.awt.*;
 import javax.swing.*;
 import conn.common.*;
+import client.ui.*;
+import client.library.*;
+import client.shop.ShopFrame;
+import client.studentInfor.SchoolRollDriver;
 
 
 /**
  * 主菜单窗口
- * @author Suckysherry
+ * @author Daisiqi
  *
  */
 
@@ -34,115 +38,211 @@ public class ClientMenuWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocationRelativeTo(getOwner());
 		setType(Type.POPUP);
+		getContentPane().setLayout(new CardLayout(0, 0));
 		
+		/**
+		 * 总panel，包括主菜单，注销，动画三个panel
+		 */
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
-		getContentPane().add(panel);
+		getContentPane().add(panel, "name_9354456756404");
 		((JPanel) getContentPane()).setOpaque(false);
-		//ImageIcon img = new ImageIcon(getClass().getResource("URL"));
-		//JLabel background = new JLabel(img);
-		//getLayeredPane().add(background, new Integer(Integer.MIN_VALUE));
-		//background.setBounds(0, 0, img.getIconWidth(), img.getIconHeight());
+		ImageIcon img = new ImageIcon(getClass().getResource("/res/menubackground.png"));
+		JLabel background = new JLabel(img);
+		getLayeredPane().add(background, new Integer(Integer.MIN_VALUE));
+		background.setBounds(0, 0, img.getIconWidth(), img.getIconHeight());
 		panel.setLayout(null);
 		
-		JLabel lbUserRole = new JLabel(user.getURole());
-		lbUserRole.setBounds(765, 235, 50, 20);
-		lbUserRole.setHorizontalAlignment(SwingConstants.CENTER);
-		lbUserRole.setVisible(true);
-		panel.add(lbUserRole);
+		/**
+		 * 上层主panel，包括教务处、图书馆等等
+		 */
+		JPanel subMainPanel = new JPanel();
+		subMainPanel.setBounds(6, 6, 650, 516);
+		subMainPanel.setOpaque(false);
+		panel.add(subMainPanel);
+		subMainPanel.setLayout(null);
+		JButton btnStudentInfor = new JButton("");
+		btnStudentInfor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		
-		JButton btnStudentInfor = new JButton("学籍管理");
-		btnStudentInfor.setBorderPainted(true);//改为false
-		//btnStudentInfor.setIcon(new ImageIcon(getClass().getResource("URL")));
-		//btnStudentInfor.setRolloverIcon(new ImageIcon(getClass().getResource("URL")));
-		btnStudentInfor.setBounds(30, 30, 177, 220);
+		/**
+		 * 学籍管理
+		 */
+		btnStudentInfor.setBounds(25, 19, 177, 220);
+		subMainPanel.add(btnStudentInfor);
+		btnStudentInfor.setBorderPainted(false);
+		btnStudentInfor.setIcon(new ImageIcon(getClass().getResource("/res/xueji3.png")));
+		btnStudentInfor.setRolloverIcon(new ImageIcon(getClass().getResource("/res/xueji.png")));
 		btnStudentInfor.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//弹出学籍管理页面
+				try {
+					SchoolRollDriver srd = new SchoolRollDriver(user);
+					srd.judge();
+				} catch(Exception e){
+					e.printStackTrace();
+				}
 			}
 		});
-		panel.add(btnStudentInfor);
 		
-		JButton btnjwc = new JButton("教务处");
-		btnjwc.setBorderPainted(true);//改为false
-		//btnjwc.setIcon(new ImageIcon(getClass().getResource("URL")));
-		//btnjwc.setRolloverIcon(new ImageIcon(getClass().getResource("URL")));
-		btnjwc.setBounds(240, 30, 177, 220);
+		/**
+		 * 教务处
+		 */
+		JButton btnjwc = new JButton("");
+		btnjwc.setBounds(242, 19, 177, 220);
+		subMainPanel.add(btnjwc);
+		btnjwc.setBorderPainted(false);
+		btnjwc.setIcon(new ImageIcon(getClass().getResource("/res/jiaowu.png")));
+		btnjwc.setRolloverIcon(new ImageIcon(getClass().getResource("/res/jiaowu2.png")));
 		btnjwc.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				//弹出教务处页面
 			}
 		});
-		panel.add(btnjwc);
 		
-		JButton btnShop = new JButton("商店");
-		btnShop.setBorderPainted(true);//改为false
-		//btnShop.setIcon(new ImageIcon(getClass().getResource("URL")));
-		//btnShop.setRolloverIcon(new ImageIcon(getClass().getResource("URL")));
-		btnShop.setBounds(240, 270, 177, 220);
+		/**
+		 * 商店
+		 */
+		JButton btnShop = new JButton("");
+		btnShop.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnShop.setBounds(242, 266, 177, 220);
+		subMainPanel.add(btnShop);
+		btnShop.setBorderPainted(false);
+		btnShop.setIcon(new ImageIcon(getClass().getResource("/res/market.png")));
+		btnShop.setRolloverIcon(new ImageIcon(getClass().getResource("/res/market2.png")));
 		btnShop.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//弹出教务处页面
+				new ShopFrame(user);
 			}
 		});
-		panel.add(btnShop);
 		
-		JButton btnLibrary = new JButton("图书馆");
-		btnLibrary.setBorderPainted(true);//改为false
-		//btnLibrary.setIcon(new ImageIcon(getClass().getResource("URL")));
-		//btnLibrary.setRolloverIcon(new ImageIcon(getClass().getResource("URL")));
-		btnLibrary.setBounds(30, 270, 177, 220);
+		/**
+		 * 图书馆
+		 */
+		JButton btnLibrary = new JButton("");
+		btnLibrary.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnLibrary.setBounds(25, 266, 177, 220);
+		subMainPanel.add(btnLibrary);
+		btnLibrary.setBorderPainted(false);
+		btnLibrary.setIcon(new ImageIcon(getClass().getResource("/res/library3.png")));
+		btnLibrary.setRolloverIcon(new ImageIcon(getClass().getResource("/res/library4.png")));
 		btnLibrary.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//弹出教务处页面
+				try {
+					new LibraryMain(user);
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
-		panel.add(btnLibrary);
 		
-		if(user.getURole().equals("admin")) {
-			JButton btnUserMng = new JButton("用户管理");
-			btnUserMng.setBorderPainted(true);//false
-			//btnUserMng.setIcon(new ImageIcon(getClass().getResource("URL")));
-			//btnUserMng.setRolloverIcon(new ImageIcon(getClass().getResource("URL")));
-			btnUserMng.setBounds(690, 310, 177, 46);
-			btnUserMng.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					//用户管理界面，增删改学生、老师、管理员等
-				}
-			});
-			panel.add(btnUserMng);
-		}
-		
-		JButton btnProfile = new JButton("个人资料");
-		btnProfile.setBorderPainted(true);//改为false
-		//btnProfile.setIcon(new ImageIcon(getClass().getResource("URL")));
-		//btnProfile.setRolloverIcon(new ImageIcon(getClass().getResource("URL")));
-		btnProfile.setBounds(690, 370, 177, 46);
+		/**
+		 * 个人信息
+		 */
+		JButton btnProfile = new JButton("");
+		btnProfile.setBounds(455, 19, 177, 220);
+		subMainPanel.add(btnProfile);
+		btnProfile.setBorderPainted(false);
+		btnProfile.setIcon(new ImageIcon(getClass().getResource("/res/userinfo.png")));
+		btnProfile.setRolloverIcon(new ImageIcon(getClass().getResource("/res/userinfo2.png")));
 		btnProfile.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//弹出个人资料界面
+				ClientProfileWindow cpw = new ClientProfileWindow(user);
+				cpw.setVisible(true);
 			}
 		});
-		panel.add(btnProfile);
 		
-		JButton btnLogout = new JButton("注销");
-		btnLogout.setBorderPainted(true);//改为false
-		//btnLogout.setIcon(new ImageIcon(getClass().getResource("URL")));
-		//btnLogout.setRolloverIcon(new ImageIcon(getClass().getResource("URL")));
-		btnLogout.setBounds(690, 430, 177, 48);
+		/**
+		 * 用户管理
+		 */
+		JButton btnUserMng = new JButton("");
+		btnUserMng.setBounds(455, 266, 177, 220);
+		subMainPanel.add(btnUserMng);
+		btnUserMng.setBorderPainted(false);
+		btnUserMng.setIcon(new ImageIcon(getClass().getResource("/res/manage.png")));
+		btnUserMng.setRolloverIcon(new ImageIcon(getClass().getResource("/res/manage2.png")));
+		btnUserMng.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				ClientUserManageWindow cumw = new ClientUserManageWindow();
+				cumw.setVisible(true);
+			}
+		});
+		if(!(user.getURole().equals("admin"))) {
+			btnUserMng.setVisible(false);
+		}
+		
+		/**
+		 * 注销panel，包括注销按钮
+		 */
+		JPanel subLogoutPanel = new JPanel();
+		subLogoutPanel.setBounds(668, 379, 226, 143);
+		subLogoutPanel.setOpaque(false);
+		panel.add(subLogoutPanel);
+		subLogoutPanel.setLayout(null);
+		JButton btnLogout = new JButton("");
+		btnLogout.setBounds(6, 23, 214, 59);
+		subLogoutPanel.add(btnLogout);
+		btnLogout.setBorderPainted(false);
+		btnLogout.setIcon(new ImageIcon(getClass().getResource("/res/menulo.png")));
+		btnLogout.setRolloverIcon(new ImageIcon(getClass().getResource("/res/menulo2.png")));
 		btnLogout.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//弹出注销界面
+				clw.frame.setVisible(true);
+				dispose();
+				System.out.println("Close");;
 			}
 		});
-		panel.add(btnLogout);
+		
+		/**
+		 * 菜单栏panel，包括动图及身份
+		 */
+		JPanel subMenuPanel = new JPanel();
+		subMenuPanel.setBounds(668, 6, 226, 367);
+		subMenuPanel.setOpaque(false);
+		panel.add(subMenuPanel);
+		subMenuPanel.setLayout(null);
+		
+		/**
+		 * gif
+		 */
+		JLabel lbPic = new JLabel("");
+		lbPic.setBounds(-95, -11, 400, 300);
+		subMenuPanel.add(lbPic);
+		lbPic.setIcon(new ImageIcon(getClass().getResource("/res/cute.gif")));
+		lbPic.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		/**
+		 * 用户身份
+		 */
+		JLabel lbUserRole = new JLabel(user.getURole());
+		lbUserRole.setBounds(80, 317, 73, 16);
+		subMenuPanel.add(lbUserRole);
+		lbUserRole.setHorizontalAlignment(SwingConstants.CENTER);
+		lbUserRole.setVisible(true);
+		
+		/**
+		 * 用户名字
+		 */
+		JLabel lbUserName = new JLabel(user.getUName());
+		lbUserName.setBounds(80, 345, 73, 16);
+		subMenuPanel.add(lbUserName);
+		lbUserName.setHorizontalAlignment(SwingConstants.CENTER);
+		lbUserName.setVisible(true);
+		lbPic.setVisible(true);
 		
 		clw.frame.setVisible(false);
 		
@@ -155,5 +255,4 @@ public class ClientMenuWindow extends JFrame {
 	public void setContenPanel(JPanel contentPanel) {
 		this.contentPanel = contentPanel;
 	}
-
 }
