@@ -22,6 +22,10 @@ public class ClientMenuWindow extends JFrame {
 	private JPanel contentPanel;
 	private ClientLoginWindow clw;
 	private User user;
+	private JPanel panel;
+	private JPanel subMainPanel;
+	private JPanel subLogoutPanel;
+	private JPanel subMenuPanel;
 	
 	/**
 	 * @param clwIn
@@ -43,7 +47,7 @@ public class ClientMenuWindow extends JFrame {
 		/**
 		 * 总panel，包括主菜单，注销，动画三个panel
 		 */
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		panel.setOpaque(false);
 		getContentPane().add(panel, "name_9354456756404");
 		((JPanel) getContentPane()).setOpaque(false);
@@ -56,7 +60,7 @@ public class ClientMenuWindow extends JFrame {
 		/**
 		 * 上层主panel，包括教务处、图书馆等等
 		 */
-		JPanel subMainPanel = new JPanel();
+		subMainPanel = new JPanel();
 		subMainPanel.setBounds(6, 6, 650, 516);
 		subMainPanel.setOpaque(false);
 		panel.add(subMainPanel);
@@ -150,6 +154,12 @@ public class ClientMenuWindow extends JFrame {
 		/**
 		 * 个人信息
 		 */
+		JButton btnClose = new JButton();
+		btnClose.setBorderPainted(false);
+		btnClose.setIcon(new ImageIcon(getClass().getResource("/res/btnclose.png")));
+		btnClose.setRolloverIcon(new ImageIcon(getClass().getResource("/res/btnclose3.png")));
+		btnClose.setBounds(0, 0, 40, 48);
+		
 		JButton btnProfile = new JButton("");
 		btnProfile.setBounds(455, 19, 177, 220);
 		subMainPanel.add(btnProfile);
@@ -159,10 +169,23 @@ public class ClientMenuWindow extends JFrame {
 		btnProfile.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				panel.setVisible(false);
 				ClientProfileWindow cpw = new ClientProfileWindow(user);
-				cpw.setVisible(true);
+				getContentPane().add(cpw.getProfilePanel());
+				cpw.getProfilePanel().setVisible(true);
+				cpw.setVisible(false);
+				btnClose.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						cpw.getProfilePanel().setVisible(false);
+						panel.setVisible(true);
+						System.out.println("Close");;
+					}
+				});
+				cpw.getProfilePanel().add(btnClose);
 			}
 		});
+		
 		
 		/**
 		 * 用户管理
@@ -176,8 +199,20 @@ public class ClientMenuWindow extends JFrame {
 		btnUserMng.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				panel.setVisible(false);
 				ClientUserManageWindow cumw = new ClientUserManageWindow();
-				cumw.setVisible(true);
+				getContentPane().add(cumw.getCreatePanel());
+				cumw.getCreatePanel().setVisible(true);
+				cumw.setVisible(false);
+				btnClose.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						cumw.getCreatePanel().setVisible(false);
+						panel.setVisible(true);
+						System.out.println("Close");;
+					}
+				});
+				cumw.getCreatePanel().add(btnClose);
 			}
 		});
 		if(!(user.getURole().equals("admin"))) {
@@ -187,7 +222,7 @@ public class ClientMenuWindow extends JFrame {
 		/**
 		 * 注销panel，包括注销按钮
 		 */
-		JPanel subLogoutPanel = new JPanel();
+		subLogoutPanel = new JPanel();
 		subLogoutPanel.setBounds(668, 379, 226, 143);
 		subLogoutPanel.setOpaque(false);
 		panel.add(subLogoutPanel);
@@ -210,7 +245,7 @@ public class ClientMenuWindow extends JFrame {
 		/**
 		 * 菜单栏panel，包括动图及身份
 		 */
-		JPanel subMenuPanel = new JPanel();
+		subMenuPanel = new JPanel();
 		subMenuPanel.setBounds(668, 6, 226, 367);
 		subMenuPanel.setOpaque(false);
 		panel.add(subMenuPanel);
@@ -254,5 +289,13 @@ public class ClientMenuWindow extends JFrame {
 	
 	public void setContenPanel(JPanel contentPanel) {
 		this.contentPanel = contentPanel;
+	}
+	
+	public JPanel getPanel() {
+		return panel;
+	}
+
+	public void setPanel(JPanel panel) {
+		this.panel = panel;
 	}
 }

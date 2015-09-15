@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.Vector;
 
 import conn.common.Student;
+import conn.common.Teacher;
 import conn.common.User;
 
 /**
@@ -18,9 +19,9 @@ import conn.common.User;
  */
 public class OperateDB {
 	public static String DRIVER_NAME = "com.mysql.jdbc.Driver";
-	public static String CONN_URL = "jdbc:mysql://107.170.216.207:3306/VirtualCampus?useUnicode=true&characterEncoding=utf8";
-	public static String USER_NAME = "vc_admin";
-	public static String PASSWORD = "12345678";
+	public static String CONN_URL = "jdbc:mysql://127.0.0.1:3306/vc?useUnicode=true&characterEncoding=utf8";
+	public static String USER_NAME = "root";
+	public static String PASSWORD = "123212321";
 	public Statement connStat;
 	protected Connection conn;
 	
@@ -95,7 +96,67 @@ public class OperateDB {
 		}
 		return users;
 	}
-	
+
+	public Vector<Student> selectStudent(String sql) throws SQLException {
+		Vector<Student> students = new Vector<Student>();
+		ResultSet rsQueryStudent = null;
+
+		try {
+			Class.forName(DRIVER_NAME);	
+			conn = DriverManager.getConnection(CONN_URL, USER_NAME, PASSWORD); 
+
+			Statement stmt = conn.createStatement();
+			rsQueryStudent = stmt.executeQuery(sql);  
+			
+			while(rsQueryStudent.next() == true) {
+				Student student = new Student();
+				student.setUBirthday(rsQueryStudent.getString("birthday"));
+				student.setUCard(rsQueryStudent.getString("Num"));
+				student.setUClass(rsQueryStudent.getString("class"));
+				student.setUHometown(rsQueryStudent.getString("hometown"));
+				student.setUID(rsQueryStudent.getString("ID"));
+				student.setUName(rsQueryStudent.getString("Name"));
+				student.setURole(rsQueryStudent.getString("role"));
+				student.setUSex(rsQueryStudent.getString("sex"));
+				students.add(student);
+			}			
+		} catch (Exception e){
+			e.printStackTrace();
+		} finally {
+			conn.close();
+		}
+		return students;
+	}
+
+	public Vector<Teacher> selectTeacher(String sql) throws SQLException {
+		Vector<Teacher> teachers = new Vector<Teacher>();
+		ResultSet rsQueryTeacher = null;
+
+		try {
+			Class.forName(DRIVER_NAME);	
+			conn = DriverManager.getConnection(CONN_URL, USER_NAME, PASSWORD); 
+			
+
+			Statement stmt = conn.createStatement();
+			rsQueryTeacher = stmt.executeQuery(sql);   
+			
+			while(rsQueryTeacher.next() == true) {
+				Teacher teacher = new Teacher();
+				teacher.setUCard(rsQueryTeacher.getString("Num"));
+				teacher.setUClass(rsQueryTeacher.getString("class"));
+				teacher.setUID(rsQueryTeacher.getString("ID"));
+				teacher.setUName(rsQueryTeacher.getString("Name"));
+				teacher.setURole(rsQueryTeacher.getString("Role"));
+				teacher.setUSex(rsQueryTeacher.getString("sex"));
+				teachers.add(teacher);
+			}			
+		} catch (Exception e){
+			e.printStackTrace();
+		} finally {
+			conn.close();
+		}
+		return teachers;
+	}
 	
 
 }

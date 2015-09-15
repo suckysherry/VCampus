@@ -9,6 +9,7 @@ import server.util.ServerSrvThreadMgr;
 import conn.common.Message;
 import conn.common.MessageType;
 import conn.common.Student;
+import conn.common.Teacher;
 import conn.common.User;
 
 /**
@@ -63,10 +64,22 @@ public class ServerThread extends Thread {
 					Vector<User> users = opdb.selectUser(sql);
 					msgRsp.setData(users);
 				}
+				else if(type.equals(MessageType.C_REQ_SELECT_STUDENTS)) {
+					String sql = (String) msg.getSql();
+					Vector<Student> students = opdb.selectStudent(sql);
+					msgRsp.setData(students);
+				}
+				else if(type.equals(MessageType.C_REQ_SELECT_TEACHERS)) {
+					String sql = (String) msg.getSql();
+					Vector<Teacher> teachers = opdb.selectTeacher(sql);
+					msgRsp.setData(teachers);
+				}
 				ObjectOutputStream oos = new ObjectOutputStream(sth.getClient().getOutputStream());
 				oos.writeObject(msgRsp);
 				oos.flush();
 				ServerSrvThreadMgr.remove(clientID);
+				
+				
 //				else if (type.equals(MessageType.C_REQ_QUERYSTU)){
 //					ServerThread sth = ServerSrvThreadMgr.get(clientID);
 //					int username = Integer.parseInt(msg.getUsername());

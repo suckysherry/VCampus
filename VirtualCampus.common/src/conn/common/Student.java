@@ -1,8 +1,8 @@
 package conn.common;
 
-//import java.io.Serializable;
+import java.io.Serializable;
 
-public class Student { //implements Serializable
+public class Student implements Serializable { 
 	//private static;
 	
 	protected String uCard;

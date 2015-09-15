@@ -1,6 +1,8 @@
 package conn.common;
 
-public class Teacher {
+import java.io.Serializable;
+
+public class Teacher implements Serializable {
 	
 	protected String uCard;
 	protected String uRole;

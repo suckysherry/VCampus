@@ -80,6 +80,18 @@ public class ClientMsgHelper {
 		this.msg.setSql(sql);
 	}
 
+	public void selectStudents(String sql) {
+		clearMsg();
+		this.msg.setType(MessageType.C_REQ_SELECT_STUDENTS);
+		this.msg.setSql(sql);
+	}
+
+	public void selectTeachers(String sql) {
+		clearMsg();
+		this.msg.setType(MessageType.C_REQ_SELECT_TEACHERS);
+		this.msg.setSql(sql);
+	}
+
 
 
 

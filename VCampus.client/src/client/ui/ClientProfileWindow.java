@@ -1,6 +1,7 @@
 package client.ui;
 
 import java.awt.event.*;
+import java.util.Vector;
 import java.awt.*;
 import javax.swing.*;
 
@@ -17,19 +18,33 @@ import conn.common.*;
 
 public class ClientProfileWindow extends JFrame {
 	private User user;
-	private Student student;
-	private Teacher teacher;
-	
+	private Vector<Student> students;
+	private Vector<Teacher> teachers;
+	private JPanel profilePanel;
 	
 	public ClientProfileWindow(User userIn) {
 		this.user = userIn;
 		
 		ProfileOperateDB podb = new ProfileOperateDB();
 		try {
-			if(user.getURole().equals("student"))
-				this.student = podb.queryStudentInDB(user.getUID());
-			else if(user.getURole().equals("teacher"))
-				this.teacher = podb.queryTeacherInDB(user.getUID());
+			if(user.getURole().equals("student")) {
+//				this.student = podb.queryStudentInDB(user.getUID());
+				String sql = String.format("SELECT * FROM STUDENT WHERE ID = '%s' ", user.getUID());
+				ClientMsgHelper cmh = new ClientMsgHelper();
+				cmh.selectStudents(sql);
+				cmh.sendMsg();
+				cmh.recieveMsg();
+				this.students = (Vector<Student>) cmh.getDataInMsg();
+			}
+			else if(user.getURole().equals("teacher")) {
+//				this.teacher = podb.queryTeacherInDB(user.getUID());
+				String sql = String.format("SELECT * FROM TEACHER WHERE ID = '%s'", user.getUID());
+				ClientMsgHelper cmh = new ClientMsgHelper();
+				cmh.selectTeachers(sql);
+				cmh.sendMsg();
+				cmh.recieveMsg();
+				this.teachers = (Vector<Teacher>) cmh.getDataInMsg();
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -47,13 +62,13 @@ public class ClientProfileWindow extends JFrame {
 		
 		setResizable(false);
 		setTitle("Profile");
-		setBounds(100, 100, 820, 391);
+		setBounds(100, 100, 900, 550);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setLocationRelativeTo(getOwner());
 		setUndecorated(true);
 
 		
-		JPanel profilePanel = new JPanel();
+		profilePanel = new JPanel();
 		profilePanel.setOpaque(false);
 		getContentPane().add(profilePanel);
 		((JPanel) getContentPane()).setOpaque(false);
@@ -66,273 +81,235 @@ public class ClientProfileWindow extends JFrame {
 		/**
 		 * 关闭页面
 		 */
-		JButton btnClose = new JButton();
-		btnClose.setBorderPainted(false);
-		btnClose.setIcon(new ImageIcon(getClass().getResource("/res/btnclose.png")));
-		btnClose.setRolloverIcon(new ImageIcon(getClass().getResource("/res/btnclose3.png")));
-		btnClose.setBounds(0, 0, 40, 48);
-		btnClose.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				dispose();
-				System.out.println("Close");;
-			}
-		});
-		profilePanel.add(btnClose);
+//		JButton btnClose = new JButton();
+//		btnClose.setBorderPainted(false);
+//		btnClose.setIcon(new ImageIcon(getClass().getResource("/res/btnclose.png")));
+//		btnClose.setRolloverIcon(new ImageIcon(getClass().getResource("/res/btnclose3.png")));
+//		btnClose.setBounds(0, 0, 40, 48);
+//		btnClose.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent arg0) {
+//				dispose();
+//				System.out.println("Close");;
+//			}
+//		});
+//		profilePanel.add(btnClose);
+		
+		JLabel lbCard = new JLabel("CARD");
+		lbCard.setBounds(60, 146, 100, 30);
+		lbCard.setHorizontalAlignment(SwingConstants.LEFT);
+		lbCard.setVisible(true);
+		lbCard.setFont(new Font("Dialog", Font.PLAIN, 20));
+		lbCard.setForeground(Color.LIGHT_GRAY);
+		profilePanel.add(lbCard);
+		JLabel lbtCard = new JLabel("一卡通");
+		lbtCard.setBounds(211, 146, 180, 30);
+		lbtCard.setHorizontalAlignment(SwingConstants.LEFT);
+		lbtCard.setVisible(true);
+		lbtCard.setForeground(Color.GRAY);
+		lbtCard.setFont(new Font("Dialog", Font.BOLD, 20));
+		profilePanel.add(lbtCard);
+		
+		JLabel lbName = new JLabel("name");
+		lbName.setBounds(250, 35, 225, 55);
+		lbName.setFont(new Font("Dialog", Font.BOLD, 46));
+		lbName.setForeground(Color.LIGHT_GRAY);
+		lbName.setHorizontalAlignment(SwingConstants.LEFT);
+		lbName.setVisible(true);
+		profilePanel.add(lbName);
+		
+		JLabel lbRole = new JLabel("ROLE");
+		lbRole.setBounds(60, 188, 100, 30);
+		lbRole.setHorizontalAlignment(SwingConstants.LEFT);
+		lbRole.setVisible(true);
+		lbRole.setFont(new Font("Dialog", Font.PLAIN, 20));
+		lbRole.setForeground(Color.LIGHT_GRAY);
+		profilePanel.add(lbRole);
+		JLabel lbtRole = new JLabel("ROLE");
+		lbtRole.setBounds(211, 188, 180, 30);
+		lbtRole.setHorizontalAlignment(SwingConstants.LEFT);
+		lbtRole.setForeground(Color.GRAY);
+		lbtRole.setFont(new Font("Dialog", Font.BOLD, 20));
+		lbtRole.setVisible(true);
+		profilePanel.add(lbtRole);
+		
+		JLabel lbID = new JLabel("ID");
+		lbID.setBounds(60, 230, 100, 30);
+		lbID.setHorizontalAlignment(SwingConstants.LEFT);
+		lbID.setVisible(true);
+		lbID.setFont(new Font("Dialog", Font.PLAIN, 20));
+		lbID.setForeground(Color.LIGHT_GRAY);
+		profilePanel.add(lbID);
+		JLabel lbtID = new JLabel("ID");
+		lbtID.setBounds(211, 230, 180, 30);
+		lbtID.setHorizontalAlignment(SwingConstants.LEFT);
+		lbtID.setForeground(Color.GRAY);
+		lbtID.setFont(new Font("Dialog", Font.BOLD, 20));
+		lbtID.setVisible(true);
+		profilePanel.add(lbtID);
+		
+		JLabel lbSex = new JLabel("SEX");
+		lbSex.setBounds(60, 272, 100, 30);
+		lbSex.setHorizontalAlignment(SwingConstants.LEFT);
+		lbSex.setVisible(true);
+		lbSex.setFont(new Font("Dialog", Font.PLAIN, 20));
+		lbSex.setForeground(Color.LIGHT_GRAY);
+		profilePanel.add(lbSex);
+		JLabel lbtSex = new JLabel("SEX");
+		lbtSex.setBounds(211, 272, 180, 30);
+		lbtSex.setHorizontalAlignment(SwingConstants.LEFT);
+		lbtSex.setForeground(Color.GRAY);
+		lbtSex.setFont(new Font("Dialog", Font.BOLD, 20));
+		lbtSex.setVisible(true);
+		profilePanel.add(lbtSex);
+		
+		JLabel lbClass = new JLabel("CLASS");
+		lbClass.setBounds(60, 314, 100, 30);
+		lbClass.setHorizontalAlignment(SwingConstants.LEFT);
+		lbClass.setVisible(true);
+		lbClass.setFont(new Font("Dialog", Font.PLAIN, 20));
+		lbClass.setForeground(Color.LIGHT_GRAY);
+		profilePanel.add(lbClass);
+		JLabel lbtClass = new JLabel("CLASS");
+		lbtClass.setBounds(211, 314, 180, 30);
+		lbtClass.setHorizontalAlignment(SwingConstants.LEFT);
+		lbtClass.setForeground(Color.GRAY);
+		lbtClass.setFont(new Font("Dialog", Font.BOLD, 20));
+		lbtClass.setVisible(true);
+		profilePanel.add(lbtClass);
+		
+		JLabel lbBirthday = new JLabel("BIRTHDAY");
+		lbBirthday.setBounds(60, 359, 100, 30);
+		lbBirthday.setHorizontalAlignment(SwingConstants.LEFT);
+		lbBirthday.setVisible(true);
+		lbBirthday.setFont(new Font("Dialog", Font.PLAIN, 20));
+		lbBirthday.setForeground(Color.LIGHT_GRAY);
+		profilePanel.add(lbBirthday);
+		JLabel lbtBirthday = new JLabel("BIRTHDAY");
+		lbtBirthday.setBounds(211, 359, 180, 30);
+		lbtBirthday.setHorizontalAlignment(SwingConstants.LEFT);
+		lbtBirthday.setForeground(Color.GRAY);
+		lbtBirthday.setFont(new Font("Dialog", Font.BOLD, 20));
+		lbtBirthday.setVisible(true);
+		profilePanel.add(lbtBirthday);
+		
+		JLabel lbHometown = new JLabel("HOME");
+		lbHometown.setBounds(60, 405, 100, 30);
+		lbHometown.setHorizontalAlignment(SwingConstants.LEFT);
+		lbHometown.setVisible(true);
+		lbHometown.setFont(new Font("Dialog", Font.PLAIN, 20));
+		lbHometown.setForeground(Color.LIGHT_GRAY);
+		profilePanel.add(lbHometown);
+		JLabel lbtHometown = new JLabel("HOME");
+		lbtHometown.setBounds(211, 405, 180, 30);
+		lbtHometown.setHorizontalAlignment(SwingConstants.LEFT);
+		lbtHometown.setForeground(Color.GRAY);
+		lbtHometown.setFont(new Font("Dialog", Font.BOLD, 20));
+		lbtHometown.setVisible(true);
+		profilePanel.add(lbtHometown);
+		
+		JLabel lbPic = new JLabel("");
+		lbPic.setIcon(new ImageIcon(getClass().getResource("/res/fun.gif")));
+		lbPic.setBounds(35, 30, 300, 300);
+		lbPic.setHorizontalAlignment(SwingConstants.CENTER);
+		lbPic.setVisible(false);
+		profilePanel.add(lbPic);
 		
 		if(user.getURole().equals("student")) {
 			
-			try {
-				JLabel lbCard = new JLabel("CARD");
-				lbCard.setBounds(60, 140, 100, 30);
-				lbCard.setHorizontalAlignment(SwingConstants.LEFT);
-				lbCard.setVisible(true);
-				lbCard.setFont(new java.awt.Font("", 0, 14));
-				lbCard.setForeground(Color.LIGHT_GRAY);
-				profilePanel.add(lbCard);
-				JLabel lbtCard = new JLabel(student.getUCard());
-				lbtCard.setBounds(150, 140, 180, 30);
-				lbtCard.setHorizontalAlignment(SwingConstants.LEFT);
-				lbtCard.setVisible(true);
-				lbtCard.setForeground(Color.GRAY);
-				lbtCard.setFont(new java.awt.Font("", 1, 14));
-				profilePanel.add(lbtCard);
-//				lbtCard.setForeground(Color.decode("64676a"));
-//				JTextField tfCard = new JTextField(student.getUCard());
-//				tfCard.setBounds(80, 20, 180, 30);
-//				tfCard.setEditable(false);
-//				tfCard.setHorizontalAlignment(SwingConstants.LEFT);
-//				tfCard.setVisible(true);
-//				profilePanel.add(tfCard);
-				
-				JLabel lbName = new JLabel(student.getUName());
-				lbName.setBounds(250, 35, 225, 35);
-				lbName.setFont(new java.awt.Font("", 1, 34));
-				lbName.setForeground(Color.LIGHT_GRAY);
-				lbName.setHorizontalAlignment(SwingConstants.LEFT);
-				lbName.setVisible(true);
-				profilePanel.add(lbName);
-				
-				JLabel lbRole = new JLabel("ROLE");
-				lbRole.setBounds(60, 165, 100, 30);
-				lbRole.setHorizontalAlignment(SwingConstants.LEFT);
-				lbRole.setVisible(true);
-				lbRole.setFont(new java.awt.Font("", 0, 14));
-				lbRole.setForeground(Color.LIGHT_GRAY);
-				profilePanel.add(lbRole);
-				JLabel lbtRole = new JLabel(student.getURole());
-				lbtRole.setBounds(150, 165, 180, 30);
-				lbtRole.setHorizontalAlignment(SwingConstants.LEFT);
-				lbtRole.setForeground(Color.GRAY);
-				lbtRole.setFont(new java.awt.Font("", 1, 14));
-				lbtRole.setVisible(true);
-				profilePanel.add(lbtRole);
-				
-				JLabel lbID = new JLabel("ID");
-				lbID.setBounds(60, 190, 100, 30);
-				lbID.setHorizontalAlignment(SwingConstants.LEFT);
-				lbID.setVisible(true);
-				lbID.setFont(new java.awt.Font("", 0, 14));
-				lbID.setForeground(Color.LIGHT_GRAY);
-				profilePanel.add(lbID);
-				JLabel lbtID = new JLabel(student.getUID());
-				lbtID.setBounds(150, 190, 180, 30);
-				lbtID.setHorizontalAlignment(SwingConstants.LEFT);
-				lbtID.setForeground(Color.GRAY);
-				lbtID.setFont(new java.awt.Font("", 1, 14));
-				lbtID.setVisible(true);
-				profilePanel.add(lbtID);
-				
-				JLabel lbSex = new JLabel("SEX");
-				lbSex.setBounds(60, 215, 100, 30);
-				lbSex.setHorizontalAlignment(SwingConstants.LEFT);
-				lbSex.setVisible(true);
-				lbSex.setFont(new java.awt.Font("", 0, 14));
-				lbSex.setForeground(Color.LIGHT_GRAY);
-				profilePanel.add(lbSex);
-				JLabel lbtSex = new JLabel(student.getUSex());
-				lbtSex.setBounds(150, 215, 180, 30);
-				lbtSex.setHorizontalAlignment(SwingConstants.LEFT);
-				lbtSex.setForeground(Color.GRAY);
-				lbtSex.setFont(new java.awt.Font("", 1, 14));
-				lbtSex.setVisible(true);
-				profilePanel.add(lbtSex);
-				
-				JLabel lbClass = new JLabel("CLASS");
-				lbClass.setBounds(60, 240, 100, 30);
-				lbClass.setHorizontalAlignment(SwingConstants.LEFT);
-				lbClass.setVisible(true);
-				lbClass.setFont(new java.awt.Font("", 0, 14));
-				lbClass.setForeground(Color.LIGHT_GRAY);
-				profilePanel.add(lbClass);
-				JLabel lbtClass = new JLabel(student.getUClass());
-				lbtClass.setBounds(150, 240, 180, 30);
-				lbtClass.setHorizontalAlignment(SwingConstants.LEFT);
-				lbtClass.setForeground(Color.GRAY);
-				lbtClass.setFont(new java.awt.Font("", 1, 14));
-				lbtClass.setVisible(true);
-				profilePanel.add(lbtClass);
-				
-				JLabel lbBirthday = new JLabel("BIRTHDAY");
-				lbBirthday.setBounds(60, 265, 100, 30);
-				lbBirthday.setHorizontalAlignment(SwingConstants.LEFT);
-				lbBirthday.setVisible(true);
-				lbBirthday.setFont(new java.awt.Font("", 0, 14));
-				lbBirthday.setForeground(Color.LIGHT_GRAY);
-				profilePanel.add(lbBirthday);
-				JLabel lbtBirthday = new JLabel(student.getUBirthday());
-				lbtBirthday.setBounds(150, 265, 180, 30);
-				lbtBirthday.setHorizontalAlignment(SwingConstants.LEFT);
-				lbtBirthday.setForeground(Color.GRAY);
-				lbtBirthday.setFont(new java.awt.Font("", 1, 14));
-				lbtBirthday.setVisible(true);
-				profilePanel.add(lbtBirthday);
-				
-				JLabel lbHometown = new JLabel("HOME:");
-				lbHometown.setBounds(60, 290, 100, 30);
-				lbHometown.setHorizontalAlignment(SwingConstants.LEFT);
-				lbHometown.setVisible(true);
-				lbHometown.setFont(new java.awt.Font("", 0, 14));
-				lbHometown.setForeground(Color.LIGHT_GRAY);
-				profilePanel.add(lbHometown);
-				JLabel lbtHometown = new JLabel(student.getUHometown());
-				lbtHometown.setBounds(150, 290, 180, 30);
-				lbtHometown.setHorizontalAlignment(SwingConstants.LEFT);
-				lbtHometown.setForeground(Color.GRAY);
-				lbtHometown.setFont(new java.awt.Font("", 1, 14));
-				lbtHometown.setVisible(true);
-				profilePanel.add(lbtHometown);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
+//			lbtCard.setForeground(Color.decode("64676a"));
+//			JTextField tfCard = new JTextField(student.getUCard());
+//			tfCard.setBounds(80, 20, 180, 30);
+//			tfCard.setEditable(false);
+//			tfCard.setHorizontalAlignment(SwingConstants.LEFT);
+//			tfCard.setVisible(true);
+//			profilePanel.add(tfCard);
+			
+			
+			lbtCard.setText(students.get(0).getUCard());
+			lbName.setText(students.get(0).getUName());
+			lbtRole.setText(students.get(0).getURole());
+			lbtID.setText(students.get(0).getUID());
+			lbtSex.setText(students.get(0).getUSex());
+			lbtClass.setText(students.get(0).getUClass());
+			lbtBirthday.setText(students.get(0).getUBirthday());
+			lbtHometown.setText(students.get(0).getUHometown());
+			
+
 			
 			
 		} else if(user.getURole().equals("teacher")) {
 			
-			JLabel lbCard = new JLabel("CARD");
-			lbCard.setBounds(60, 140, 100, 30);
-			lbCard.setHorizontalAlignment(SwingConstants.LEFT);
-			lbCard.setVisible(true);
-			lbCard.setFont(new java.awt.Font("", 0, 14));
-			lbCard.setForeground(Color.LIGHT_GRAY);
-			profilePanel.add(lbCard);
-			JLabel lbtCard = new JLabel(teacher.getUCard());
-			lbtCard.setBounds(150, 140, 180, 30);
-			lbtCard.setHorizontalAlignment(SwingConstants.LEFT);
-			lbtCard.setVisible(true);
-			lbtCard.setForeground(Color.GRAY);
-			lbtCard.setFont(new java.awt.Font("", 1, 14));
-			profilePanel.add(lbtCard);
-			
-			JLabel lbName = new JLabel(teacher.getUName());
-			lbName.setBounds(250, 35, 225, 35);
-			lbName.setFont(new java.awt.Font("", 1, 36));
-			lbName.setForeground(Color.LIGHT_GRAY);
-			lbName.setHorizontalAlignment(SwingConstants.LEFT);
-			lbName.setVisible(true);
-			profilePanel.add(lbName);
-			
-			JLabel lbRole = new JLabel("ROLE");
-			lbRole.setBounds(60, 165, 100, 30);
-			lbRole.setHorizontalAlignment(SwingConstants.LEFT);
-			lbRole.setVisible(true);
-			lbRole.setFont(new java.awt.Font("", 0, 14));
-			lbRole.setForeground(Color.LIGHT_GRAY);
-			profilePanel.add(lbRole);
-			JLabel lbtRole = new JLabel(teacher.getURole());
-			lbtRole.setBounds(150, 165, 180, 30);
-			lbtRole.setHorizontalAlignment(SwingConstants.LEFT);
-			lbtRole.setForeground(Color.GRAY);
-			lbtRole.setFont(new java.awt.Font("", 1, 14));
-			lbtRole.setVisible(true);
-			profilePanel.add(lbtRole);
-			
-			JLabel lbID = new JLabel("ID");
-			lbID.setBounds(60, 190, 100, 30);
-			lbID.setHorizontalAlignment(SwingConstants.LEFT);
-			lbID.setVisible(true);
-			lbID.setFont(new java.awt.Font("", 0, 14));
-			lbID.setForeground(Color.LIGHT_GRAY);
-			profilePanel.add(lbID);
-			JLabel lbtID = new JLabel(teacher.getUID());
-			lbtID.setBounds(150, 190, 180, 30);
-			lbtID.setHorizontalAlignment(SwingConstants.LEFT);
-			lbtID.setForeground(Color.GRAY);
-			lbtID.setFont(new java.awt.Font("", 1, 14));
-			lbtID.setVisible(true);
-			profilePanel.add(lbtID);
-			
-			JLabel lbSex = new JLabel("SEX");
-			lbSex.setBounds(60, 215, 100, 30);
-			lbSex.setHorizontalAlignment(SwingConstants.LEFT);
-			lbSex.setVisible(true);
-			lbSex.setFont(new java.awt.Font("", 0, 14));
-			lbSex.setForeground(Color.LIGHT_GRAY);
-			profilePanel.add(lbSex);
-			JLabel lbtSex = new JLabel(teacher.getUSex());
-			lbtSex.setBounds(150, 215, 180, 30);
-			lbtSex.setHorizontalAlignment(SwingConstants.LEFT);
-			lbtSex.setForeground(Color.GRAY);
-			lbtSex.setFont(new java.awt.Font("", 1, 14));
-			lbtSex.setVisible(true);
-			profilePanel.add(lbtSex);
-			
-			JLabel lbClass = new JLabel("CLASS");
-			lbClass.setBounds(60, 240, 100, 30);
-			lbClass.setHorizontalAlignment(SwingConstants.LEFT);
-			lbClass.setVisible(true);
-			lbClass.setFont(new java.awt.Font("", 0, 14));
-			lbClass.setForeground(Color.LIGHT_GRAY);
-			profilePanel.add(lbClass);
-			JLabel lbtClass = new JLabel(teacher.getUClass());
-			lbtClass.setBounds(150, 240, 180, 30);
-			lbtClass.setHorizontalAlignment(SwingConstants.LEFT);
-			lbtClass.setForeground(Color.GRAY);
-			lbtClass.setFont(new java.awt.Font("", 1, 14));
-			lbtClass.setVisible(true);
-			profilePanel.add(lbtClass);
+			lbtCard.setText(teachers.get(0).getUCard());
+			lbName.setText(teachers.get(0).getUName());
+			lbtRole.setText(teachers.get(0).getURole());
+			lbtID.setText(teachers.get(0).getUID());
+			lbtSex.setText(teachers.get(0).getUSex());
+			lbtClass.setText(teachers.get(0).getUClass());
+			lbBirthday.setVisible(false);
+			lbHometown.setVisible(false);
+			lbtBirthday.setVisible(false);
+			lbtHometown.setVisible(false);
+	
 			
 		} else if(user.getURole().equals("admin")) {
 			
-			JLabel lbPic = new JLabel("");
-			lbPic.setIcon(new ImageIcon(getClass().getResource("/res/fun.gif")));
-			lbPic.setBounds(35, 30, 300, 300);
-			lbPic.setHorizontalAlignment(SwingConstants.CENTER);
+			lbCard.setVisible(false);
+			lbRole.setVisible(false);
+			lbID.setVisible(false);
+			lbSex.setVisible(false);
+			lbClass.setVisible(false);
+			lbBirthday.setVisible(false);
+			lbHometown.setVisible(false);
+			
+			lbtCard.setVisible(false);
+			lbName.setVisible(false);
+			lbtRole.setVisible(false);
+			lbtID.setVisible(false);
+			lbtSex.setVisible(false);
+			lbtClass.setVisible(false);
+			lbtBirthday.setVisible(false);
+			lbtHometown.setVisible(false);
+			
 			lbPic.setVisible(true);
-			profilePanel.add(lbPic);
+			
 		}
 		
 		JLabel lbPassword = new JLabel("New Pwd:");
-		lbPassword.setBounds(450, 150, 100, 30);
+		lbPassword.setBounds(491, 198, 100, 30);
 		lbPassword.setHorizontalAlignment(SwingConstants.LEFT);
 		lbPassword.setVisible(true);
-		lbPassword.setFont(new java.awt.Font("", 0, 14));
+		lbPassword.setFont(new Font("Dialog", Font.PLAIN, 20));
 		lbPassword.setForeground(Color.LIGHT_GRAY);
 		profilePanel.add(lbPassword);
 		final JPasswordField tfPassword = new JPasswordField("");
-		tfPassword.setBounds(540, 150, 180, 30);
+		tfPassword.setBounds(591, 201, 234, 30);
 		tfPassword.setHorizontalAlignment(SwingConstants.CENTER);
 		tfPassword.setVisible(true);
 		profilePanel.add(tfPassword);
 		
 		JLabel lbConPwd = new JLabel("Confirm:");
-		lbConPwd.setBounds(450, 195, 100, 30);
+		lbConPwd.setBounds(491, 269, 100, 30);
 		lbConPwd.setHorizontalAlignment(SwingConstants.LEFT);
-		lbConPwd.setFont(new java.awt.Font("", 0, 14));
+		lbConPwd.setFont(new Font("Dialog", Font.PLAIN, 20));
 		lbConPwd.setForeground(Color.LIGHT_GRAY);
 		lbConPwd.setVisible(true);
 		profilePanel.add(lbConPwd);
 		final JPasswordField tfConPwd = new JPasswordField("");
-		tfConPwd.setBounds(540, 195, 180, 30);
+		tfConPwd.setBounds(591, 272, 234, 30);
 		tfConPwd.setHorizontalAlignment(SwingConstants.CENTER);
 		tfConPwd.setVisible(true);
 		profilePanel.add(tfConPwd);
 		
 		JButton btnChangePwd = new JButton("");
+		btnChangePwd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		btnChangePwd.setBorderPainted(false);
 		btnChangePwd.setIcon(new ImageIcon(getClass().getResource("/res/profilebtn.png")));
 		btnChangePwd.setRolloverIcon(new ImageIcon(getClass().getResource("/res/profilebtn2.png")));
-		btnChangePwd.setBounds(470, 250, 250, 47);
+		btnChangePwd.setBounds(557, 388, 250, 47);
 		btnChangePwd.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -362,6 +339,15 @@ public class ClientProfileWindow extends JFrame {
 		profilePanel.add(btnChangePwd);
 		
 		
+	}
+	
+	public JPanel getProfilePanel() {
+		return profilePanel;
+	}
+
+
+	public void setProfilePanel(JPanel profilePanel) {
+		this.profilePanel = profilePanel;
 	}
 
 }
