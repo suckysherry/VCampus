@@ -25,7 +25,6 @@ public class ClientProfileWindow extends JFrame {
 	public ClientProfileWindow(User userIn) {
 		this.user = userIn;
 		
-		ProfileOperateDB podb = new ProfileOperateDB();
 		try {
 			if(user.getURole().equals("student")) {
 //				this.student = podb.queryStudentInDB(user.getUID());
@@ -210,7 +209,7 @@ public class ClientProfileWindow extends JFrame {
 		
 		JLabel lbPic = new JLabel("");
 		lbPic.setIcon(new ImageIcon(getClass().getResource("/res/fun.gif")));
-		lbPic.setBounds(35, 30, 300, 300);
+		lbPic.setBounds(70, 80, 300, 300);
 		lbPic.setHorizontalAlignment(SwingConstants.CENTER);
 		lbPic.setVisible(false);
 		profilePanel.add(lbPic);

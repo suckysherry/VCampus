@@ -42,8 +42,8 @@ public class ClientUserManageWindow extends JFrame {
 		background.setLayout(null);
 
 		JLabel lbUserList = new JLabel("User list:");
-		lbUserList.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-		lbUserList.setBounds(30, 20, 100, 30);
+		lbUserList.setFont(new Font("Lucida Grande", Font.PLAIN, 16));
+		lbUserList.setBounds(30, 39, 100, 30);
 		lbUserList.setHorizontalAlignment(SwingConstants.LEFT);
 		lbUserList.setVisible(true);
 		createPanel.add(lbUserList);
@@ -66,7 +66,6 @@ public class ClientUserManageWindow extends JFrame {
 			cmh.sendMsg();
 			cmh.recieveMsg();
 			users = (Vector<User>) cmh.getDataInMsg();
-			users = umodb.selectUser();
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -95,7 +94,7 @@ public class ClientUserManageWindow extends JFrame {
 
 		final JTable tbUser = new JTable(data, tableHead);
 		final JScrollPane scrollpane = new JScrollPane(tbUser);
-		scrollpane.setBounds(30, 62, 456, 425);
+		scrollpane.setBounds(30, 73, 454, 404);
 		tbUser.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		scrollpane.setViewportView(tbUser);
 		scrollpane.setRowHeaderView(tbUser.getTableHeader());
@@ -168,7 +167,7 @@ public class ClientUserManageWindow extends JFrame {
 			}
 		});
 		btnCreate.setBorderPainted(true);
-		btnCreate.setBounds(498, 420, 150, 44);
+		btnCreate.setBounds(512, 420, 150, 44);
 		btnCreate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -182,8 +181,14 @@ public class ClientUserManageWindow extends JFrame {
 
 
 				try {
-					boolean rscu = umodb.createUserInDB(userid, password, name, role, isLibraryAdmin, isJWCAdmin, isShopAdmin);
-					if(rscu == true) {
+//					boolean rscu = umodb.createUserInDB(userid, password, name, role, isLibraryAdmin, isJWCAdmin, isShopAdmin);
+					String sql = String.format("INSERT INTO USER VALUES ('%s', '%s', '%s', '%d', '%d', '%d', '%s')", userid, password, role, isLibraryAdmin?1:0, isJWCAdmin?1:0, isShopAdmin?1:0, name);
+					ClientMsgHelper cmh = new ClientMsgHelper();
+					cmh.insert(sql);
+					cmh.sendMsg();
+					cmh.recieveMsg();
+					boolean istu = cmh.getState();
+					if(istu == true) {
 						JOptionPane.showMessageDialog(null, "成功创建新用户！", "信息", JOptionPane.INFORMATION_MESSAGE);
 						user.add(userid);
 						user.add(name);
@@ -207,7 +212,7 @@ public class ClientUserManageWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		btnUpdateRole.setOpaque(true);
+		btnUpdateRole.setOpaque(false);
 		btnUpdateRole.setBounds(718, 420, 150, 44);
 		btnUpdateRole.addMouseListener(new MouseAdapter() {
 			@Override

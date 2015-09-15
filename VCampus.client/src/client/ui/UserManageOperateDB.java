@@ -18,30 +18,30 @@ public class UserManageOperateDB {
 	 * @return
 	 * @throws SQLException
 	 */
-	public Vector<User> selectUser() throws SQLException {
-		Vector<User> users = new Vector<User>();
-		ResultSet rsGetUser = null;
-
-		try {
-			Class.forName(DRIVER_NAME);	
-			conn = DriverManager.getConnection(CONN_URL, USER_NAME, PASSWORD); 
-			
-
-			Statement stmt = conn.createStatement();
-			rsGetUser = stmt.executeQuery("SELECT * FROM USER"); 
-			
-			while(rsGetUser.next() == true)  {
-				User user = new User(rsGetUser.getString("id"), rsGetUser.getString("role"), rsGetUser.getString("name"), rsGetUser.getBoolean("isLibraryAdmin"), rsGetUser.getBoolean("isJWCAdmin"), rsGetUser.getBoolean("isShopAdmin"));
-				users.add(user);
-			}
-			
-		} catch (Exception e){
-			e.printStackTrace();
-		} finally {
-			conn.close();
-		}
-		return users;
-	}
+//	public Vector<User> selectUser() throws SQLException {
+//		Vector<User> users = new Vector<User>();
+//		ResultSet rsGetUser = null;
+//
+//		try {
+//			Class.forName(DRIVER_NAME);	
+//			conn = DriverManager.getConnection(CONN_URL, USER_NAME, PASSWORD); 
+//			
+//
+//			Statement stmt = conn.createStatement();
+//			rsGetUser = stmt.executeQuery("SELECT * FROM USER"); 
+//			
+//			while(rsGetUser.next() == true)  {
+//				User user = new User(rsGetUser.getString("id"), rsGetUser.getString("role"), rsGetUser.getString("name"), rsGetUser.getBoolean("isLibraryAdmin"), rsGetUser.getBoolean("isJWCAdmin"), rsGetUser.getBoolean("isShopAdmin"));
+//				users.add(user);
+//			}
+//			
+//		} catch (Exception e){
+//			e.printStackTrace();
+//		} finally {
+//			conn.close();
+//		}
+//		return users;
+//	}
 	
 	
 	

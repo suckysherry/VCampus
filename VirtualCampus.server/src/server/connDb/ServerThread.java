@@ -74,6 +74,11 @@ public class ServerThread extends Thread {
 					Vector<Teacher> teachers = opdb.selectTeacher(sql);
 					msgRsp.setData(teachers);
 				}
+				else if(type.equals(MessageType.C_REQ_INSERT)){
+					String sql = (String) msg.getSql();
+					Boolean state = opdb.insert(sql);
+					msgRsp.setState(state);
+				}
 				ObjectOutputStream oos = new ObjectOutputStream(sth.getClient().getOutputStream());
 				oos.writeObject(msgRsp);
 				oos.flush();

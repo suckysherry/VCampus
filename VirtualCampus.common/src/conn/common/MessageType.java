@@ -12,6 +12,7 @@ public interface MessageType {
 	String C_REQ_SELECT_USERS 		= "C_REQ_SELECT_USERS";
 	String C_REQ_SELECT_STUDENTS	= "C_REQ_SELECT_STUDENTS";
 	String C_REQ_SELECT_TEACHERS 	= "C_REQ_SELECT_TEACHERS";
+	String C_REQ_INSERT 			= "C_REQ_INSERT";
 
 
 

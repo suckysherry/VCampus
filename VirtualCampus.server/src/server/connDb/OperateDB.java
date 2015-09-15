@@ -157,6 +157,26 @@ public class OperateDB {
 		}
 		return teachers;
 	}
+
+	public Boolean insert(String sql) throws SQLException {
+		try {
+			Class.forName(DRIVER_NAME);	
+			conn = DriverManager.getConnection(CONN_URL, USER_NAME, PASSWORD); 
+			
+			Statement stmt = conn.createStatement();
+			stmt.executeUpdate(sql);
+			return true;
+					
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} catch (Exception e){
+			e.printStackTrace();
+			return false;
+		} finally {
+			conn.close();
+		}
+	}
 	
 
 }

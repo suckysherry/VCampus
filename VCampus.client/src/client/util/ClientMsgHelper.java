@@ -92,6 +92,12 @@ public class ClientMsgHelper {
 		this.msg.setSql(sql);
 	}
 
+	public void insert(String sql) {
+		clearMsg();
+		this.msg.setType(MessageType.C_REQ_INSERT);
+		this.msg.setSql(sql);
+	}
+
 
 
 
