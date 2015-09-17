@@ -18,7 +18,7 @@ import server.connDb.ServerSrv;
 
 /**
  * server ui
- * @author daisiqi
+ * @author 戴思琪
  *
  */
 public class ServerUI {

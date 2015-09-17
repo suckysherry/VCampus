@@ -8,7 +8,7 @@ import conn.common.Message;
 
 /**
  * 连接Server
- * @author xindervella
+ * @author 戴思琪
  *
  */
 public class ClientSrv implements ClientSrvInterface {

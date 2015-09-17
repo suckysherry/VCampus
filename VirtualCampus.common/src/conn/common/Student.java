@@ -2,6 +2,12 @@ package conn.common;
 
 import java.io.Serializable;
 
+/**
+ * 学生类 基础类
+ * @author 戴思琪
+ *
+ */
+
 public class Student implements Serializable { 
 	//private static;
 	

@@ -13,7 +13,7 @@ import conn.common.*;
 
 /**
  * 用户管理窗口
- * @author Suckysherry
+ * @author 戴思琪
  *
  */
 
@@ -48,7 +48,6 @@ public class ClientUserManageWindow extends JFrame {
 		lbUserList.setVisible(true);
 		createPanel.add(lbUserList);
 
-		UserManageOperateDB umodb = new UserManageOperateDB();
 		Vector<String> tableHead = new Vector<String>();
 		final Vector<Vector<String>> data = new Vector<Vector<String>>();
 		Vector<String> user = new Vector<String>();
@@ -56,8 +55,8 @@ public class ClientUserManageWindow extends JFrame {
 		tableHead.add("Name");
 		tableHead.add("Role");
 		tableHead.add("Lib admin");
-		tableHead.add("Shop admin");
 		tableHead.add("JWC admin");
+		tableHead.add("Shop admin");
 		Vector<User> users = null;
 		try {
 			String sql = "SELECT * FROM USER";
@@ -181,13 +180,27 @@ public class ClientUserManageWindow extends JFrame {
 
 
 				try {
-//					boolean rscu = umodb.createUserInDB(userid, password, name, role, isLibraryAdmin, isJWCAdmin, isShopAdmin);
 					String sql = String.format("INSERT INTO USER VALUES ('%s', '%s', '%s', '%d', '%d', '%d', '%s')", userid, password, role, isLibraryAdmin?1:0, isJWCAdmin?1:0, isShopAdmin?1:0, name);
 					ClientMsgHelper cmh = new ClientMsgHelper();
 					cmh.insert(sql);
 					cmh.sendMsg();
 					cmh.recieveMsg();
 					boolean istu = cmh.getState();
+					
+					if(role.equals("student")) {
+						ClientMsgHelper cmh_s = new ClientMsgHelper();
+						String sql_s = String.format("INSERT INTO STUDENT(ID, Name, role) VALUES ('%s', '%s', '%s')", userid, name, role);
+						cmh_s.insert(sql_s);
+						cmh_s.sendMsg();
+						cmh_s.recieveMsg();
+					} else if (role.equals("teacher")) {
+						ClientMsgHelper cmh_t = new ClientMsgHelper();
+						String sql_t = String.format("INSERT INTO TEACHER(ID, Name, Role) VALUES ('%s', '%s', '%s')", userid, name, role);
+						cmh_t.insert(sql_t);
+						cmh_t.sendMsg();
+						cmh_t.recieveMsg();
+					}
+					
 					if(istu == true) {
 						JOptionPane.showMessageDialog(null, "成功创建新用户！", "信息", JOptionPane.INFORMATION_MESSAGE);
 						user.add(userid);
@@ -198,6 +211,7 @@ public class ClientUserManageWindow extends JFrame {
 						user.add(Boolean.toString(isShopAdmin));
 						data.add(0, (Vector<String>) user.clone());
 						user.removeAllElements();
+						
 					} else
 						JOptionPane.showMessageDialog(null, "新用户创建不成功！", "错误", JOptionPane.ERROR_MESSAGE);
 				} catch(Exception e) {
@@ -223,20 +237,119 @@ public class ClientUserManageWindow extends JFrame {
 				Boolean isLibraryAdmin = cbLibAdmin.isSelected();
 				Boolean isJWCAdmin = cbJWCAdmin.isSelected();
 				Boolean isShopAdmin = cbShopAdmin.isSelected();
-				int rowCount = tbUser.getRowCount();
-				for(int i=0; i<rowCount; i++) {
-					if(tbUser.getValueAt(i, 0).equals(userid)) {
-						tbUser.setValueAt(role, i, 2);
-						tbUser.setValueAt(isLibraryAdmin, i, 3);
-						tbUser.setValueAt(isJWCAdmin, i, 4);
-						tbUser.setValueAt(isShopAdmin, i, 5);
-						break;
-					}
-				}
-				tbUser.updateUI();
+//				int rowCount = tbUser.getRowCount();
+//				for(int i=0; i<rowCount; i++) {
+//					if(tbUser.getValueAt(i, 0).equals(userid)) {
+//						tbUser.setValueAt(role, i, 2);
+//						tbUser.setValueAt(isLibraryAdmin, i, 3);
+//						tbUser.setValueAt(isJWCAdmin, i, 4);
+//						tbUser.setValueAt(isShopAdmin, i, 5);
+//						break;
+//					}
+//				}
+//				tbUser.updateUI();
 				try {
-					boolean rsmur = umodb.modifyUserRoleInDB(userid, role, name, isLibraryAdmin, isJWCAdmin, isShopAdmin);
-					if(rsmur == true) {
+					String sql = String.format("UPDATE USER SET role = '%s', isLibraryAdmin = '%d', isJWCAdmin = '%d', isShopAdmin = '%d' WHERE id = '%s' ", role, isLibraryAdmin?1:0, isJWCAdmin?1:0, isShopAdmin?1:0, userid);
+					ClientMsgHelper cmh = new ClientMsgHelper();
+					cmh.update(sql);
+					cmh.sendMsg();
+					cmh.recieveMsg();
+					boolean mur = cmh.getState();
+					
+					if(role.equals("student")) {
+						String sql_i_s = String.format("INSERT INTO STUDENT(ID, Name, role) VALUES ('%s', '%s', '%s')", userid, name, role);
+						ClientMsgHelper cmh_i_s = new ClientMsgHelper();
+						cmh_i_s.insert(sql_i_s);
+						cmh_i_s.sendMsg();
+						cmh_i_s.recieveMsg();
+						
+						Vector<Teacher> teachers = new Vector<Teacher>();
+						String sql_s_t = String.format("SELECT * FROM TEACHER WHERE ID = '%s'", userid);
+						ClientMsgHelper cmh_s_t = new ClientMsgHelper();
+						cmh_s_t.selectStudents(sql_s_t);
+						cmh_s_t.sendMsg();
+						cmh_s_t.recieveMsg();
+						teachers = (Vector<Teacher>) cmh_s_t.getDataInMsg();
+						
+						if(teachers.size() != 0) {
+							String sql_d_t = String.format("DELETE FROM TEACHER WHERE ID = '%s'", userid);
+							ClientMsgHelper cmh_d_t = new ClientMsgHelper();
+							cmh_d_t.delete(sql_d_t);
+							cmh_d_t.sendMsg();
+							cmh_d_t.recieveMsg();
+						}	
+					}
+					
+					else if(role.equals("teacher")) {
+						String sql_i_t = String.format("INSERT INTO TEACHER(ID, Name, role) VALUES ('%s', '%s', '%s')", userid, name, role);
+						ClientMsgHelper cmh_i_t = new ClientMsgHelper();
+						cmh_i_t.insert(sql_i_t);
+						cmh_i_t.sendMsg();
+						cmh_i_t.recieveMsg();
+						
+						
+						Vector<Student> students = new Vector<Student>();
+						String sql_s_s = String.format("SELECT * FROM STUDENT WHERE ID = '%s'", userid);
+						ClientMsgHelper cmh_s_s = new ClientMsgHelper();
+						cmh_s_s.selectStudents(sql_s_s);
+						cmh_s_s.sendMsg();
+						cmh_s_s.recieveMsg();
+						students = (Vector<Student>) cmh_s_s.getDataInMsg();
+						
+						if(students.size() != 0) {
+							String sql_d_s = String.format("DELETE FROM STUDENT WHERE ID = '%s'", userid);
+							ClientMsgHelper cmh_d_s = new ClientMsgHelper();
+							cmh_d_s.delete(sql_d_s);
+							cmh_d_s.sendMsg();
+							cmh_d_s.recieveMsg();
+						}	
+					} 
+					else if (role.equals("admin")) {
+						Vector<Teacher> teachers_a = new Vector<Teacher>();
+						String sql_t_a = String.format("SELECT * FROM TEACHER WHERE ID = '%s'", userid);
+						ClientMsgHelper cmh_t_a = new ClientMsgHelper();
+						cmh_t_a.selectStudents(sql_t_a);
+						cmh_t_a.sendMsg();
+						cmh_t_a.recieveMsg();
+						teachers_a = (Vector<Teacher>) cmh_t_a.getDataInMsg();
+						
+						if(teachers_a.size() != 0) {
+							String sql_d_t_a = String.format("DELETE FROM TEACHER WHERE ID = '%s'", userid);
+							ClientMsgHelper cmh_d_t_a = new ClientMsgHelper();
+							cmh_d_t_a.delete(sql_d_t_a);
+							cmh_d_t_a.sendMsg();
+							cmh_d_t_a.recieveMsg();
+						}	
+						
+						Vector<Student> students_a = new Vector<Student>();
+						String sql_s_a = String.format("SELECT * FROM STUDENT WHERE ID = '%s'", userid);
+						ClientMsgHelper cmh_s_a = new ClientMsgHelper();
+						cmh_s_a.selectStudents(sql_s_a);
+						cmh_s_a.sendMsg();
+						cmh_s_a.recieveMsg();
+						students_a = (Vector<Student>) cmh_s_a.getDataInMsg();
+						
+						if(students_a.size() != 0) {
+							String sql_d_s_a = String.format("DELETE FROM STUDENT WHERE ID = '%s'", userid);
+							ClientMsgHelper cmh_d_s_a = new ClientMsgHelper();
+							cmh_d_s_a.delete(sql_d_s_a);
+							cmh_d_s_a.sendMsg();
+							cmh_d_s_a.recieveMsg();
+						}
+					}
+					int rowCount = tbUser.getRowCount();
+					for(int i=0; i<rowCount; i++) {
+						if(tbUser.getValueAt(i, 0).equals(userid)) {
+							tbUser.setValueAt(role, i, 2);
+							tbUser.setValueAt(isLibraryAdmin, i, 3);
+							tbUser.setValueAt(isJWCAdmin, i, 4);
+							tbUser.setValueAt(isShopAdmin, i, 5);
+							break;
+						}
+					}
+					tbUser.updateUI();
+					
+					if(mur == true) {
 						JOptionPane.showMessageDialog(null, "修改用户身份成功！", "信息", JOptionPane.INFORMATION_MESSAGE);
 					} else
 						JOptionPane.showMessageDialog(null, "修改用户身份不成功！", "错误", JOptionPane.ERROR_MESSAGE);

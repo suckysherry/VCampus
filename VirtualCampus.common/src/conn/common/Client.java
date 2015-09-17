@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * 客户端类 表明自己身份 便于线程管理
- * @author xindervella
+ * @author 09013104-daisiqi
  *
  */
 public class Client implements Serializable {

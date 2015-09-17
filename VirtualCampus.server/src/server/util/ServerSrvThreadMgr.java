@@ -7,7 +7,7 @@ import server.connDb.ServerThread;
 
 /**
  * 线程池
- * @author daisiqi
+ * @author 戴思琪
  *
  */
 public class ServerSrvThreadMgr {

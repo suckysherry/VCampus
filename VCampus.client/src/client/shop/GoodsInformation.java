@@ -1,131 +1,169 @@
+/*
+ * classname:GoodsInformation
+ * 
+ * Date:2015,9,14
+ */
+
 package client.shop;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
-import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import conn.common.Goods;
+
+/*
+ * creat a frame for showing the Information about the good
+ */
 
 public class GoodsInformation extends JFrame {
 
 	private JPanel contentPane;
+	private JPanel panel;
 
-	/**
-	 * Launch the application.
-	 */
-	/**
-	 * Create the frame.
-	 */
-	public GoodsInformation( final ShopUser m,final Goods a) {
-		final JFrame frame = new JFrame();
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setBounds(100, 100, 453, 337);
+	
+	public JPanel getPane(){
+		return panel;
+	}
+	
+	public GoodsInformation(final ShopUser m,final Goods a) {
+		
+		setTitle("商品信息");
+		setBounds(100, 100, 653, 455);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		frame.setContentPane(contentPane);
+		getContentPane().add(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel label = new JLabel("虚拟商店");
-		label.setFont(new Font("宋体", Font.PLAIN, 18));
-		label.setBounds(180, 10, 72, 20);
-		contentPane.add(label);
+		panel =new JPanel();
+		panel.setLocation(0, 0);
+		panel.setLayout(null);
+		panel.setSize(637,426);
+		contentPane.add(panel);
+		
+		JLabel label = new JLabel("商品信息");
+		label.setFont(new Font("宋体", Font.PLAIN, 20));
+		label.setBounds(226, 10, 98, 57);
+		panel.add(label);
 		
 		JLabel label_1 = new JLabel("商品名称");
-		label_1.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_1.setBounds(99, 108, 54, 15);
-		contentPane.add(label_1);
+		label_1.setFont(new Font("宋体", Font.PLAIN, 17));
+		label_1.setBounds(24, 77, 86, 32);
+		panel.add(label_1);
 		
 		JLabel label_2 = new JLabel("商品价格");
-		label_2.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_2.setBounds(99, 133, 54, 15);
-		contentPane.add(label_2);
+		label_2.setFont(new Font("宋体", Font.PLAIN, 17));
+		label_2.setBounds(24, 125, 86, 45);
+		panel.add(label_2);
 		
 		JLabel label_3 = new JLabel("商品类型");
-		label_3.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_3.setBounds(99, 158, 54, 15);
-		contentPane.add(label_3);
+		label_3.setFont(new Font("宋体", Font.PLAIN, 17));
+		label_3.setBounds(22, 180, 72, 32);
+		panel.add(label_3);
 		
 		JLabel label_4 = new JLabel("商品数量");
-		label_4.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_4.setBounds(99, 189, 54, 15);
-		contentPane.add(label_4);
+		label_4.setFont(new Font("宋体", Font.PLAIN, 17));
+		label_4.setBounds(24, 235, 86, 38);
+		panel.add(label_4);
 		
-		JButton button = new JButton("购买");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				final ShopUser user =m;
-				final Goods goods =a;
-				user.buy(goods);
+		//show the good picture
+		ImageIcon pic = new ImageIcon(getClass().getResource(a.getGoodsImage()));
+		pic.setImage(pic.getImage().getScaledInstance(228,219,Image.SCALE_DEFAULT));
+		JLabel label_6 = new JLabel();
+		label_6.setIcon(pic);
+		label_6.setFont(new Font("宋体", Font.PLAIN, 12));
+		label_6.setBounds(336, 81, 228, 219);
+		panel.add(label_6);
+		
+		JLabel label_7 = new JLabel(a.getGoodsName());
+		label_7.setFont(new Font("宋体", Font.PLAIN, 17));
+		label_7.setBounds(144, 77, 118, 28);
+		panel.add(label_7);
+		
+		JLabel label_8 = new JLabel(""+a.getGoodsPrice());
+		label_8.setFont(new Font("宋体", Font.PLAIN, 17));
+		label_8.setBounds(144, 125, 118, 45);
+		panel.add(label_8);
+		
+		 String type1 = null;
+			if(a.getGoodsType().equals("clothing")){
+				type1 = "服装饰品";	
+			}else if(a.getGoodsType().equals("electronic")){
+				type1 = "电子产品";	
+			}else if(a.getGoodsType().equals("shoes")){
+				type1 = "鞋子箱包";		
+			}else if(a.getGoodsType().equals("foods")){
+				type1 = "零食";	
+			}else if(a.getGoodsType().equals("drugs")){
+				type1 = "医药保健";	
+			}
+			
+		JLabel label_9 = new JLabel(type1);
+		label_9.setFont(new Font("宋体", Font.PLAIN, 17));
+		label_9.setBounds(142, 180, 107, 32);
+		panel.add(label_9);
+		
+		JLabel label_10 = new JLabel(""+a.getGoodNumber());
+		label_10.setFont(new Font("宋体", Font.PLAIN, 17));
+		label_10.setBounds(144, 241, 118, 28);
+		panel.add(label_10);
+		
+		JButton button_1 = new JButton("返回");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				dispose();
 			}
 		});
-		button.setFont(new Font("宋体", Font.PLAIN, 12));
-		button.setBounds(77, 214, 93, 23);
+		button_1.setFont(new Font("宋体", Font.PLAIN, 12));
+		button_1.setBounds(243, 341, 93, 23);
+		panel.add(button_1);
 		
-		JButton button_2 = new JButton("增加");
+		final JButton btnClose = new JButton();
+		btnClose.setBorderPainted(false);
+		btnClose.setIcon(new ImageIcon(getClass().getResource("/res/btnclose.png")));
+		btnClose.setRolloverIcon(new ImageIcon(getClass().getResource("/res/btnclose3.png")));
+		btnClose.setBounds(0, 0, 40, 48);
+		
+		//add a ActionListener for store the good and update it in DB 
+		JButton button_2 = new JButton("修改信息");
 		button_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				m.add(a);
-				JOptionPane.showMessageDialog(null,"增加成功");
-				frame.dispose();;
+				final GoodsUpdate update = new GoodsUpdate(a);
+				panel.setVisible(false);
+				update.getPane().add(btnClose);
+				contentPane.add(update.getPane());
+				update.getPane().setVisible(true);
+				update.getPane().setSize(655, 455);
+				update.setVisible(false);
+				
+				btnClose.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent arg0) {
+						update.getPane().setVisible(false);
+						getContentPane().remove(update.getPane());
+						panel.setVisible(true);
+						System.out.println("Close");
+					}
+				});
+
 			}
 		});
 		button_2.setFont(new Font("宋体", Font.PLAIN, 12));
-		button_2.setBounds(77, 214, 93, 23);
-		
-		//如果用户role是管理员，显示增加按钮；如果用户role是普通用户，则显示购买按钮
+		button_2.setBounds(169, 340, 93, 23);
 		if(m.isShopAdmin()){
-			contentPane.add(button_2);
-		}else{
-			contentPane.add(button);
+			panel.add(button_2);
+			button_1.setBounds(320, 340, 93, 23);
 		}
-		
-		JButton button_1 = new JButton("取消");
-		button_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				frame.dispose();
-			}
-		});
-		button_1.setFont(new Font("宋体", Font.PLAIN, 12));
-		button_1.setBounds(237, 218, 93, 23);
-		contentPane.add(button_1);
-		
-		JLabel label_5 = new JLabel("图片");
-		label_5.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_5.setBounds(126, 74, 38, 20);
-		contentPane.add(label_5);
-		
-		JLabel label_6 = new JLabel("New label");//显示图片
-		label_6.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_6.setBounds(180, 40, 93, 56);
-		contentPane.add(label_6);
-		
-		JLabel label_7 = new JLabel(a.getGoodsName());
-		label_7.setBounds(190, 108, 107, 15);
-		contentPane.add(label_7);
-		
-		JLabel label_8 = new JLabel(""+a.getGoodsPrice());
-		label_8.setBounds(190, 133, 107, 15);
-		contentPane.add(label_8);
-		
-		JLabel label_9 = new JLabel(a.getGoodsType());
-		label_9.setBounds(190, 158, 107, 15);
-		contentPane.add(label_9);
-		
-		JLabel label_10 = new JLabel(""+a.getGoodNumber());
-		label_10.setBounds(190, 189, 107, 15);
-		contentPane.add(label_10);
 	}
 	
-
 }

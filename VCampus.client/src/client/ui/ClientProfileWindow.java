@@ -12,7 +12,7 @@ import conn.common.*;
 
 /**
  * 个人信息窗口
- * @author Suckysherry
+ * @author 戴思琪
  *
  */
 
@@ -21,6 +21,10 @@ public class ClientProfileWindow extends JFrame {
 	private Vector<Student> students;
 	private Vector<Teacher> teachers;
 	private JPanel profilePanel;
+	
+	/**
+	 * @param userIn
+	 */
 	
 	public ClientProfileWindow(User userIn) {
 		this.user = userIn;

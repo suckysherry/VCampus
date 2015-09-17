@@ -2,6 +2,12 @@ package conn.common;
 
 import java.io.Serializable;
 
+/**
+ * 教师类 基础类
+ * @author 戴思琪
+ *
+ */
+
 public class Teacher implements Serializable {
 	
 	protected String uCard;

@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * 用户类 基础类
- * @author Suckysherry
+ * @author 戴思琪
  *
  */
 
@@ -124,7 +124,7 @@ public class User implements Serializable {
 	}
 	
 	public boolean isShopAdmin() {
-		return isJWCAdmin;
+		return isShopAdmin;
 	}
 	
 	public void setShopAdmin(boolean isShopAdmin) {

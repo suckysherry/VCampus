@@ -1,4 +1,3 @@
-//Created on 2015-08-27
 package client.ui;
 
 import java.awt.*;
@@ -13,8 +12,8 @@ import conn.common.*;
 
 /**
  * 登录界面
- * @author Suckysherry
- *
+ * @author 戴思琪
+ * 
  */
 
 public class ClientLoginWindow {

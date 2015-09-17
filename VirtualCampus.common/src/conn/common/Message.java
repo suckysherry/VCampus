@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * 消息类
- * @author daisiqi
+ * @author 戴思琪
  *
  */
 public class Message implements Serializable {
@@ -13,7 +13,52 @@ public class Message implements Serializable {
 	protected Client client; // 客户端身份（避免发错数据）
 	protected Object data;
 	protected Boolean state;
-	
+	//library
+		protected byte[] bytes;
+
+		protected int maxBorrowDays;
+		protected int maxBorrowNum;
+		protected Book newBook;
+		protected String bookID;
+		protected String readerID;
+		public byte[] getBytes() {
+			return bytes;
+		}
+		public void setBytes(byte[] bytes) {
+			this.bytes = bytes;
+		}
+
+		public String getReaderID() {
+			return readerID;
+		}
+		public void setReaderID(String readerID) {
+			this.readerID = readerID;
+		}
+		public int getMaxBorrowDays() {
+			return maxBorrowDays;
+		}
+		public void setMaxBorrowDays(int maxBorrowDays) {
+			this.maxBorrowDays = maxBorrowDays;
+		}
+		public int getMaxBorrowNum() {
+			return maxBorrowNum;
+		}
+		public void setMaxBorrowNum(int maxBorrowNum) {
+			this.maxBorrowNum = maxBorrowNum;
+		}
+		public Book getNewBook(){
+			return newBook;
+		}
+		public String getBookID(){
+			return bookID;
+		}
+		public void setNewBook(Book currentBook){
+			newBook = currentBook;
+		}
+		public void setBookID(String id){
+			bookID = id;
+		}
+		//end library
 	public Boolean getState() {
 		return state;
 	}

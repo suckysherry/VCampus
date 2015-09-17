@@ -1,11 +1,13 @@
-//created on 2015-8-28
 package client.ui;
 
 import java.awt.event.*;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.awt.*;
 import javax.swing.*;
 import conn.common.*;
 import client.ui.*;
+import client.calendar.MyCalendar;
 import client.library.*;
 import client.shop.ShopFrame;
 import client.studentInfor.SchoolRollDriver;
@@ -13,7 +15,7 @@ import client.studentInfor.SchoolRollDriver;
 
 /**
  * 主菜单窗口
- * @author Daisiqi
+ * @author 戴思琪
  *
  */
 
@@ -110,6 +112,12 @@ public class ClientMenuWindow extends JFrame {
 		/**
 		 * 商店
 		 */
+		final JButton btcloseshop =new JButton();
+		btcloseshop.setBorderPainted(false);
+		btcloseshop.setIcon(new ImageIcon(getClass().getResource("/res/btnclose.png")));
+		btcloseshop.setRolloverIcon(new ImageIcon(getClass().getResource("/res/btnclose3.png")));
+		btcloseshop.setBounds(0,0,40,48);
+		
 		JButton btnShop = new JButton("");
 		btnShop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -123,13 +131,44 @@ public class ClientMenuWindow extends JFrame {
 		btnShop.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				new ShopFrame(user);
+				try {
+					ShopFrame shopframe =new ShopFrame(user);
+					panel.setVisible(false);
+					
+					getContentPane().add(shopframe.getcontentPane());
+					shopframe.getcontentPane().setVisible(true);
+					shopframe.setVisible(false);
+					
+					btcloseshop.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent arg0) {
+//							shopframe.getPane().setVisible(false);
+							getContentPane().remove(shopframe.getcontentPane());
+							panel.setVisible(true);
+							System.out.println("Close");;
+						}
+					});
+					shopframe.getPane().add(btcloseshop);
+					
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
 		/**
 		 * 图书馆
 		 */
+		JButton btnLibClose = new JButton();
+		btnLibClose.setBorderPainted(false);
+		btnLibClose.setIcon(new ImageIcon(getClass().getResource("/res/btnclose.png")));
+		btnLibClose.setRolloverIcon(new ImageIcon(getClass().getResource("/res/btnclose3.png")));
+		btnLibClose.setBounds(0, 0, 40, 48);
+		
 		JButton btnLibrary = new JButton("");
 		btnLibrary.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -143,11 +182,20 @@ public class ClientMenuWindow extends JFrame {
 		btnLibrary.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				try {
-					new LibraryMain(user);
-				} catch(Exception e) {
-					e.printStackTrace();
-				}
+				LibraryMainPanel lap = new LibraryMainPanel(user);
+				//lap.setVisible(false);
+				panel.setVisible(false);
+				getContentPane().add(lap.getContentPane());
+				lap.getContentPane().setVisible(true);
+				btnLibClose.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent arg0) {
+						getContentPane().remove(lap.getContentPane());
+						panel.setVisible(true);
+						System.out.println("Close");;
+					}
+				});
+				lap.getPanel().add(btnLibClose);
 			}
 		});
 		
@@ -177,7 +225,7 @@ public class ClientMenuWindow extends JFrame {
 				btnClose.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						cpw.getProfilePanel().setVisible(false);
+						getContentPane().remove(cpw.getProfilePanel());
 						panel.setVisible(true);
 						System.out.println("Close");;
 					}
@@ -207,7 +255,7 @@ public class ClientMenuWindow extends JFrame {
 				btnClose.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent arg0) {
-						cumw.getCreatePanel().setVisible(false);
+						getContentPane().remove(cumw.getCreatePanel());
 						panel.setVisible(true);
 						System.out.println("Close");;
 					}
@@ -228,20 +276,29 @@ public class ClientMenuWindow extends JFrame {
 		panel.add(subLogoutPanel);
 		subLogoutPanel.setLayout(null);
 		JButton btnLogout = new JButton("");
-		btnLogout.setBounds(6, 23, 214, 59);
+		btnLogout.setBounds(6, 78, 214, 59);
 		subLogoutPanel.add(btnLogout);
 		btnLogout.setBorderPainted(false);
 		btnLogout.setIcon(new ImageIcon(getClass().getResource("/res/menulo.png")));
 		btnLogout.setRolloverIcon(new ImageIcon(getClass().getResource("/res/menulo2.png")));
-		btnLogout.addMouseListener(new MouseAdapter() {
+		
+		/**
+		 * 日历按钮
+		 */
+		JButton btnCalendar = new JButton("日历");
+		btnCalendar.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+		btnCalendar.setBounds(20, 19, 182, 47);
+		subLogoutPanel.add(btnCalendar);
+		btnCalendar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				clw.frame.setVisible(true);
-				dispose();
-				System.out.println("Close");;
+				try {
+					new MyCalendar();
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
-		
 		/**
 		 * 菜单栏panel，包括动图及身份
 		 */

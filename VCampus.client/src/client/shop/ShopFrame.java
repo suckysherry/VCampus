@@ -1,19 +1,24 @@
+/*
+ * classname:ShopFrame
+ * 
+ * Date:2015,9,15
+ * 
+ */
+
 package client.shop;
 
-import java.awt.EventQueue;
+import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,78 +29,67 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import conn.common.*;
+import client.util.ClientMsgHelper;
+import conn.common.Goods;
+import conn.common.User;
 
-public class ShopFrame extends JFrame {
+/*
+ * create a new frame for the shop
+ */
+public class ShopFrame extends JFrame{
 
 	private JPanel contentPane;
+	private JPanel panel;
 
-	/**
-	 * Launch the application.
-	 */
+	public JPanel getcontentPane(){
+		return contentPane;
+	}
+	public JPanel getPane(){
+		return panel;
+	}
 	
-	//主函数用于测试
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					User user =new User();
-//					ShopFrame b =new ShopFrame(user);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
+	public ShopFrame(User m) throws UnknownHostException, IOException {
 
-	 /**
-	 * Create the frame.
-	 */
-	public ShopFrame(User m) {
 		ShopUser shopUser = new ShopUser(m);
-		List<Goods> a = new ArrayList<>();
-		a=	VStoreManage.getVSM().getAllGoods();
-		List <JLabel> jl = new ArrayList<>();
-		jl=VStoreManage.getVSM().getAllJLabel(shopUser,a);
+		List<Goods> allgoods = new ArrayList<>();
 		
-		JFrame frame =new JFrame();
-		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frame.setBounds(100, 100, 481, 358);
+		//get the all the goods
+		String sql = "select * FROM Goods"; 
+		ClientMsgHelper cmh = new ClientMsgHelper();
+		cmh.selectGoods(sql);
+		cmh.sendMsg();
+		cmh.recieveMsg();
+		allgoods = (List<Goods>) cmh.getDataInMsg();
+		
+		//create the label for every good
+		List <JLabel> jl = new ArrayList<>();
+		jl=VStoreManage.getVSM().getAllJLabel(shopUser,allgoods);
+		
+		setBackground(Color.WHITE);
+		setBounds(100, 100, 900, 550);
+		setSize(900,560);
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
+		getContentPane().add(contentPane);
+		setVisible(true);
+		setSize(900, 560);
+		
+		panel =new JPanel();
+		panel.setLayout(null);
+		panel.setSize(900,560);
+		contentPane.add(panel);
 		
 		JLabel label = new JLabel("\u865A\u62DF\u5546\u5E97");//显示名字”虚拟商店“
-		label.setBounds(170, 21, 72, 20);
+		label.setBounds(398, 10, 118, 46);
 		label.setFont(new Font("宋体", Font.PLAIN, 18));
-		contentPane.add(label);
+		panel.add(label);
 		
-		JLabel label_1 = new JLabel("\u6211\u7684\u4F59\u989D\uFF1A"+shopUser.getUserCash());//如果不是管理员则显示当前余额
-		label_1.setFont(new Font("宋体", Font.PLAIN, 12));
-		label_1.setBounds(300, 10, 72, 20);
-		if(!shopUser.isShopAdmin()){
-			contentPane.add(label_1);
-		}
-		
-		
-		JButton button = new JButton("\u6DFB\u52A0\u65B0\u5546\u54C1");//如果是管理员，则有添加新商品按钮
-		button.setFont(new Font("宋体", Font.PLAIN, 12));
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				AddGoods a=new AddGoods();
-			}
-		});
-		button.setBounds(300, 33, 93, 23);
-		if(shopUser.isShopAdmin()){
-			contentPane.add(button);
-		}
-		
-		
+		//create the tabbed panel for showing goods
 		final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(10, 66, 445, 243);
-		contentPane.add(tabbedPane);
+		tabbedPane.setBounds(10, 66, 672, 445);
+		panel.add(tabbedPane);
 		tabbedPane.addChangeListener(new ChangeListener(){
 			public void stateChanged(ChangeEvent e){
 				int selectedIndex =tabbedPane.getSelectedIndex();
@@ -103,51 +97,103 @@ public class ShopFrame extends JFrame {
 			}
 		});
 		
-		JPanel contentPaneA1 =new JPanel(new GridLayout(0,5,6,6));
+		//add all the goods in the tabbedpane where the type is
+		JPanel contentPaneA1 =new JPanel(new FlowLayout(0,20,20));
+		contentPaneA1.setBackground(Color.WHITE);
 		JScrollPane contentPaneA =new JScrollPane(contentPaneA1);
-		contentPaneA.setName("全部商品");
+		contentPaneA.setName("服装饰品");
 		tabbedPane.add(contentPaneA);
-		for(int i = 0;i<a.size();i++)
+		for(int i = 0;i<allgoods.size();i++)
 		{
-			contentPaneA1.add(jl.get(i));
-		}	
+				if(allgoods.get(i).getGoodsType().equals("clothing")){
+					jl.get(i).setBounds(59, 204, 103,93);
+					contentPaneA1.add(jl.get(i));
+				}
+		}
 	
-		JPanel contentPaneB1 =new JPanel(new GridLayout(0,5,6,6));
+		JPanel contentPaneB1 =new JPanel(new FlowLayout(0,20,20));
+		contentPaneB1.setBackground(Color.WHITE);
 		JScrollPane contentPaneB =new JScrollPane(contentPaneB1);
 		contentPaneB.setName("电子产品");
 		tabbedPane.add(contentPaneB);
-		for(int i = 0;i<a.size();i++)
+		for(int i = 0;i<allgoods.size();i++)
 		{
-			if(a.get(i).getGoodsType().equals("e")){
-			System.out.println("电子产品");
+			if(allgoods.get(i).getGoodsType().equals("electronic")){
 				contentPaneB1.add(jl.get(i));
 			}
 		}
 	
-		JPanel contentPaneC1 =new JPanel(new GridLayout(0,5,6,6));
+		JPanel contentPaneC1 =new JPanel(new FlowLayout(0,20,20));
+		contentPaneC1.setBackground(Color.WHITE);
 		JScrollPane contentPaneC =new JScrollPane(contentPaneC1);
-		contentPaneC.setName("生活用品");
+		contentPaneC.setName("鞋子箱包");
 		tabbedPane.add(contentPaneC);
-		for(int i = 0;i<a.size();i++)
-		{
-			if(a.get(i).getGoodsType().equals("l")){
-				contentPaneC1.add(jl.get(i));
-				System.out.println("生活用品");
+		for(int i = 0;i<allgoods.size();i++)
+			{
+				if(allgoods.get(i).getGoodsType().equals("shoes")){
+					contentPaneC1.add(jl.get(i));
+				}
 			}
-		}
 		
-		JPanel contentPaneD1 =new JPanel(new GridLayout(0,5,6,6));
+		JPanel contentPaneD1 =new JPanel(new FlowLayout(0,20,20));
+		contentPaneD1.setBackground(Color.WHITE);
 		JScrollPane contentPaneD =new JScrollPane(contentPaneD1);
-		contentPaneD.setName("衣服鞋帽");
+		contentPaneD.setName("医药保健品");
 		tabbedPane.add(contentPaneD);
-		for(int i = 0;i<a.size();i++)
+		for(int i = 0;i<allgoods.size();i++)
 		{
-			if(a.get(i).getGoodsType().equals("w")){
+			if(allgoods.get(i).getGoodsType().equals("foods")){
 				contentPaneD1.add(jl.get(i));
 			}
 		}
 		
+		JPanel contentPaneE1 =new JPanel(new FlowLayout(0,20,20));
+		JScrollPane contentPaneE =new JScrollPane(contentPaneE1);
+		contentPaneE1.setBackground(Color.WHITE);
+		contentPaneE.setName("零食");
+		tabbedPane.add(contentPaneE);
+		for(int i = 0;i<allgoods.size();i++)
+		{
+			if(allgoods.get(i).getGoodsType().equals("drugs")){
+				contentPaneE1.add(jl.get(i));
+			}
+		}
+		
+		final JButton btnClose = new JButton();
+		btnClose.setBorderPainted(false);
+		btnClose.setIcon(new ImageIcon(getClass().getResource("/res/btnclose.png")));
+		btnClose.setRolloverIcon(new ImageIcon(getClass().getResource("/res/btnclose3.png")));
+		btnClose.setBounds(0, 0, 40, 48);
+		
+		JButton button = new JButton("添加新商品");//如果是管理员，则有添加新商品按钮
+		button.setFont(new Font("宋体", Font.PLAIN, 17));
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				final AddGoods addgood =new AddGoods();
+				addgood.getPane().add(btnClose);
+				panel.setVisible(false);
+				contentPane.add(addgood.getPane());
+				addgood.getPane().setVisible(true);
+				addgood.getPane().setSize(900, 560);
+				addgood.setVisible(false);
+				
+				btnClose.addMouseListener(new MouseAdapter() {
+					public void mouseClicked(MouseEvent arg0) {
+						addgood.getPane().setVisible(false);	
+						getContentPane().remove(addgood.getPane());
+						panel.setVisible(true);
+						System.out.println("Close");
+					}
+				});
+				
+			}
+		}); 
+		button.setBounds(720, 20, 139, 46);
+		if(shopUser.isShopAdmin()){
+			panel.add(button);
+		}
 	}
-	
 }
+
+
 

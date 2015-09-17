@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import com.sun.xml.internal.fastinfoset.util.CharArrayIntMap;
+
+import client.util.ClientMsgHelper;
 import conn.common.User;
 
 import javax.swing.JLabel;
@@ -19,8 +22,13 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
-public class BorrowOrReturnBook extends JFrame {
+import java.awt.Rectangle;
+/**
+ * 提供借书还书的panel,用于借书还书.
+ * @author 陈石开
+ *
+ */
+public class BorrowOrReturnBookPanel extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField userIDText;
@@ -32,88 +40,117 @@ public class BorrowOrReturnBook extends JFrame {
 	 */
 	
 	//主函数用于测试
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					User us;
-					us = new User("61013110");
-					us.setLibraryAdmin(false);
-					BorrowOrReturnBook frame = new BorrowOrReturnBook(us);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					User us;
+//					us = new User("61013110");
+//					us.setLibraryAdmin(false);
+//					BorrowOrReturnBookPanel frame = new BorrowOrReturnBookPanel(us);
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
+	 * @param parentPanel 
 	 */
-	public BorrowOrReturnBook(User us) {
+	public BorrowOrReturnBookPanel(User us, JPanel parentPanel) {
 		isAdmin = us.isLibraryAdmin();
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 374, 273);
-		setVisible(true);
+		setBounds(100, 100, 932, 629);
 		contentPane = new JPanel();
+		contentPane.setBounds(new Rectangle(0, 0, 900, 550));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JLabel label = new JLabel("借还书");//标题“虚拟校园图书馆”
-		label.setBounds(98, 0, 161, 53);
-		label.setForeground(Color.BLACK);
-		label.setFont(new Font("微软雅黑", Font.PLAIN, 23));
-		contentPane.add(label);
-		
-		JButton button = new JButton("借书");//“我的图书”按钮，用于查询当前用户借阅信息
-		button.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				borrowBookAction();
-			}
-		});//事件监听器，新建一个MyBook对象
-		button.setBounds(89, 166, 93, 23);
-		contentPane.add(button);
-		
-		JButton button_1 = new JButton("还书");//“查询”按钮
-		button_1.setFont(new Font("微软雅黑", Font.PLAIN, 12));
-		button_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				returnBook();
-			}
-		});//事件监听器，查询显示信息，目前为空
-		button_1.setBounds(192, 166, 93, 23);
-		contentPane.add(button_1);
-		
-		userIDText = new JTextField();//输入框，用于查询书名
-		userIDText.setBounds(124, 66, 134, 23);
-		userIDText.setColumns(10);
-		contentPane.add(userIDText);
-		
-		bookIDText = new JTextField();
-		bookIDText.setBounds(124, 114, 134, 21);
-		contentPane.add(bookIDText);
-		bookIDText.setColumns(10);
-		
-		JLabel lblNewLabel = new JLabel("用户ID");
-		lblNewLabel.setBounds(57, 70, 54, 15);
-		contentPane.add(lblNewLabel);
 		if(isAdmin == false){
 			userIDText.setText(us.getUID());
 			userIDText.setEditable(false);
 		}
 		
+		JPanel panel = new JPanel();
+		panel.setBounds(0, 0, 900, 550);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		JLabel label = new JLabel("借还书");
+		label.setBounds(364, 10, 110, 53);
+		panel.add(label);
+		label.setForeground(Color.BLACK);
+		label.setFont(new Font("微软雅黑", Font.PLAIN, 23));
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(10, 73, 685, 467);
+		panel.add(panel_1);
+		panel_1.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("用户ID");
+		lblNewLabel.setBounds(133, 137, 54, 15);
+		panel_1.add(lblNewLabel);
+		
+		userIDText = new JTextField();
+		userIDText.setBounds(197, 133, 311, 23);
+		panel_1.add(userIDText);
+		userIDText.setColumns(10);
+		
+		bookIDText = new JTextField();
+		bookIDText.setBounds(197, 277, 311, 21);
+		panel_1.add(bookIDText);
+		bookIDText.setColumns(10);
+		
 		JLabel lblid = new JLabel("图书ID");
-		lblid.setBounds(57, 117, 54, 15);
-		contentPane.add(lblid);
+		lblid.setBounds(133, 280, 54, 15);
+		panel_1.add(lblid);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBounds(705, 73, 185, 467);
+		panel.add(panel_2);
+		panel_2.setLayout(null);
+		
+		JButton button = new JButton("借书");
+		button.setBounds(44, 95, 97, 23);
+		panel_2.add(button);
+		button.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+		
+		JButton button_1 = new JButton("还书");
+		button_1.setBounds(44, 213, 97, 23);
+		panel_2.add(button_1);
+		button_1.setFont(new Font("微软雅黑", Font.PLAIN, 12));
+		
+		JButton button_2 = new JButton("返回");
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				parentPanel.getComponent(0).setVisible(true);
+				parentPanel.remove(contentPane);
+			}
+		});
+		button_2.setBounds(48, 331, 93, 23);
+		panel_2.add(button_2);
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				returnBook();
+			}
+		});
+		button.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				borrowBookAction();
+			}
+		});
 	}
 
 	protected void returnBook() {
-		OperateDB opdp = new OperateDB();
+		ClientMsgHelper cmh = new ClientMsgHelper();
 		int rst;
-		rst = opdp.returnBook(userIDText.getText(),bookIDText.getText());
+		cmh.returnBook(userIDText.getText(),bookIDText.getText());
+		cmh.sendMsg();
+		cmh.recieveMsg();
+		rst = (int) cmh.getDataInMsg();
 		switch (rst) {
 		case 0:
 			JOptionPane.showMessageDialog(contentPane.getParent().getParent(), "还书失败,未知错误!", "还书", JOptionPane.ERROR_MESSAGE);
@@ -137,9 +174,12 @@ public class BorrowOrReturnBook extends JFrame {
 	}
 
 	protected void borrowBookAction() {
-		OperateDB opdp = new OperateDB();
+		ClientMsgHelper cmh = new ClientMsgHelper();
 		int rst;
-		rst = opdp.borrowBook(userIDText.getText(),bookIDText.getText());
+		cmh.borrowBook(userIDText.getText(),bookIDText.getText());
+		cmh.sendMsg();
+		cmh.recieveMsg();
+		rst = (int) cmh.getDataInMsg();
 		switch (rst) {
 		case 0:
 			JOptionPane.showMessageDialog(contentPane.getParent().getParent(), "借书失败,未知错误!", "借书", JOptionPane.ERROR_MESSAGE);
@@ -167,5 +207,4 @@ public class BorrowOrReturnBook extends JFrame {
 		}
 		
 	}
-
 }

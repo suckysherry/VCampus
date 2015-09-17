@@ -1,24 +1,21 @@
-package client.shop;
+package conn.common;
 
-import javax.swing.*;
-import java.net.*;
+import java.io.Serializable;
 
-public class Goods {
+public class Goods implements Serializable{
 	private String goodsName;//商品名称
 	private String goodsType;//商品类型
 	private int goodsPrice;//商品价格
-	private Icon goodsImage;//商品图片
+	private String picPath;//商品图片
 	private int goodsNumber;//商品数量
 	
-	public Goods(String goodsname,String goodstype,int goodsprice,int goodsnumber){
+	public Goods(String goodsname,String goodstype,int goodsprice,int goodsnumber,String picpath){
 		goodsName = goodsname;
 		goodsType = goodstype;
 		goodsPrice =goodsprice;
 		goodsNumber =goodsnumber;
+		picPath = picpath;
 		
-		
-		//URL url = Goods.class.getResource(picturename);
-		//goodsImage = new ImageIcon(url);
 	}
 	
 	public void setGoodsName(String goodsname){
@@ -42,12 +39,11 @@ public class Goods {
 		return goodsPrice;
 	}
 	
-	public void setGoodsImage(String picturename){
-		URL url = Goods.class.getResource(picturename);
-		goodsImage = new ImageIcon(url);
+	public void setGoodsImage(String path){
+		picPath =path;
 	}
-	public Icon getGoodsImage(){
-		return goodsImage;
+	public String getGoodsImage(){
+		return picPath;
 	}
 	
 	public void setGoodNumber(int goodsnumber){
@@ -56,5 +52,5 @@ public class Goods {
 	public int getGoodNumber(){
 		return goodsNumber;
 	}
-}
 
+}

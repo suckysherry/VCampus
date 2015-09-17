@@ -9,7 +9,7 @@ import server.util.ServerSrvThreadMgr;
 
 /**
  * 服务器服务
- * @author xindervella
+ * @author 戴思琪
  *
  */
 public class ServerSrv implements ServerSrvInterface {

@@ -6,10 +6,11 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package client.library;
+package conn.common;
 
 import java.awt.Image;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Vector;
 
@@ -21,16 +22,24 @@ import javax.swing.ImageIcon;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class Book {
-	public String bookId;//书籍Id
-	public String bookName;//书籍名
-	public String bookAuthor;//书籍名
-	public String bookPublisher;//书籍名
-	public String bookPublishingDate;//书籍名
-	public String bookDetails;//详细信息
-	public int bookNum;//总数
-	public int bookBorrowedNum = 0;//借阅数
-	public File bookPic;
+public class Book implements Serializable{
+	private String bookId;//书籍Id
+	private String bookName;//书籍名
+	private String bookAuthor;//书籍名
+	private String bookPublisher;//书籍名
+	private String bookPublishingDate;//书籍名
+	private String bookDetails;//详细信息
+	private int bookNum;//总数
+	private int bookBorrowedNum = 0;//借阅数
+	private String bookPic;
+	private byte[] picBytes;
+	public byte[] getPicBytes() {
+		return picBytes;
+	}
+	public void setPicBytes(byte[] picBytes) {
+		this.picBytes = picBytes;
+	}
+	
 	public Book clone(){
 		Book a = new Book();
 		a.setBookId(this.bookId);
@@ -43,15 +52,11 @@ public class Book {
 		a.setBookBorrowedNum(this.bookBorrowedNum);
 		return a;
 	}
-	public void setBookPic(File icon){
+	public void setBookPic(String icon){
 		bookPic = icon;
 	}
-	public File getBookPic(){
+	public String getBookPic(){
 		return bookPic;
-	}
-	public void updateBookInDB(String oldID){
-		OperateDB opdb = new OperateDB();
-		 opdb.updateBookInDB(this, oldID);
 	}
 	public Book(String bookid,String bookname, int num){
 		bookId = bookid;
